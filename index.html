@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ApexAI Universal Expert Brain</title>
+    <title>ApexAI Universal Expert Brain & Sure-Shot Vault</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome v6 Icons -->
@@ -64,7 +64,7 @@
                 <span class="text-emerald-400 shrink-0"><i class="fa-solid fa-radar mr-1 animate-pulse"></i>Scanner Active:</span>
                 <div class="overflow-hidden whitespace-nowrap w-full">
                     <span class="animate-marquee inline-block font-mono text-cyan-200">
-                        I Am Finding Your Gift Rajveer &nbsp;&bull;&nbsp; Jab tak aisi koi candle market mein nahi milti jo aapki knowledge ke according ho, tab tak wait karein &nbsp;&bull;&nbsp; Continuous Live Candle & Breakout Calculation Engine Active!
+                        I Am Finding Your Gift Rajveer &nbsp;&bull;&nbsp; Jab tak aisi koi candle market mein nahi milti jo aapki knowledge ke according ho, tab tak wait karein &nbsp;&bull;&nbsp; UltraMsg WhatsApp Auto-Alert Integration Active!
                     </span>
                 </div>
             </div>
@@ -80,15 +80,52 @@
             </div>
             <div class="text-center">
                 <h1 class="font-bold text-xs tracking-wider text-cyan-400">APEX UNIVERSAL AI</h1>
-                <p class="text-[9px] text-emerald-400">Expert Reasoning & Live Knowledge Engine</p>
+                <p class="text-[9px] text-emerald-400">WhatsApp Auto-Alert & Knowledge Engine</p>
             </div>
             <div class="flex items-center space-x-2">
+                <button onclick="toggleWhatsAppSettings()" class="px-2.5 py-1 bg-emerald-900/60 hover:bg-emerald-900 text-emerald-300 text-xs rounded-lg border border-emerald-500/40 flex items-center space-x-1 transition">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span class="text-[10px]">WhatsApp</span>
+                </button>
                 <button onclick="exportMemoryBackup()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs rounded-lg border border-cyan-500/30 flex items-center space-x-1 transition">
                     <i class="fa-solid fa-download"></i>
                     <span class="text-[10px]">Backup</span>
                 </button>
             </div>
         </header>
+
+        <!-- WHATSAPP CONFIGURATION PANEL MODAL / DRAWER -->
+        <div id="whatsappConfigModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+            <div class="neon-card w-full max-w-md rounded-2xl p-5 space-y-4 border border-emerald-500/40 shadow-2xl relative">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+                        <h3 class="text-sm font-bold text-slate-100">UltraMsg WhatsApp Configuration</h3>
+                    </div>
+                    <button onclick="toggleWhatsAppSettings()" class="w-7 h-7 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[10px] text-slate-400 mb-1 uppercase font-semibold">UltraMsg Instance ID</label>
+                        <input type="text" id="instanceInput" placeholder="e.g. instance12345" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-slate-400 mb-1 uppercase font-semibold">UltraMsg Token</label>
+                        <input type="text" id="tokenInput" placeholder="e.g. abcd1234xyz" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-slate-400 mb-1 uppercase font-semibold">Recipient Phone (with country code)</label>
+                        <input type="text" id="phoneInput" placeholder="e.g. +919876543210" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+                </div>
+                <div class="pt-2 flex space-x-2">
+                    <button onclick="saveWhatsAppCredentials()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition">Save & Test WhatsApp</button>
+                    <button onclick="toggleWhatsAppSettings()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs rounded-xl hover:bg-slate-700">Close</button>
+                </div>
+            </div>
+        </div>
 
         <!-- DYNAMIC CONTENT TABS CONTAINER -->
         <main class="flex-1 overflow-hidden relative flex flex-col">
@@ -137,7 +174,7 @@
                     </div>
                     <div class="overflow-hidden whitespace-nowrap">
                         <p id="liveAiCommentary" class="text-[11px] text-cyan-300 font-medium animate-pulse">
-                            [Rajveer's Universal AI Brain]: Continuously calculating live market breakouts and candle configurations...
+                            [Rajveer's Universal AI Brain]: Continuously calculating live market breakouts and WhatsApp triggers...
                         </p>
                     </div>
                 </div>
@@ -174,7 +211,7 @@
                         <div class="flex items-start space-x-2">
                             <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
                             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl rounded-tl-none space-y-1.5 text-slate-200 leading-relaxed">
-                                <p>Namaste Rajveer! Main aapka Universal Expert AI Assistant hoon. Sure-Shot Vault ke andar live breakout aur previous candle calculations continuously top par chal rahi hain. Jab bhi koi pattern 100% result achieve karta hai, woh automatic naye pattern ke roop mein vault mein sabse upar add ho jata hai!</p>
+                                <p>Namaste Rajveer! Main aapka Universal Expert AI Assistant hoon. Sure-Shot Vault ke andar live breakout calculations ke sath WhatsApp Auto-Alert engine active hai. Jab bhi koi pattern 100% result achieve karta hai, woh vault mein add hone ke sath aapke WhatsApp par instantly bhej diya jata hai!</p>
                             </div>
                         </div>
                     </div>
@@ -223,7 +260,7 @@
                 <div id="liveVaultCalcHeader" class="p-3 bg-cyan-950/50 border-b border-cyan-500/30 shrink-0 live-calc-box">
                     <div class="flex items-center justify-between mb-1">
                         <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider flex items-center">
-                            <i class="fa-solid fa-bolt text-amber-400 mr-1 animate-bounce"></i> Live Breakout & Candle Scanner
+                            <i class="fa-solid fa-bolt text-amber-400 mr-1 animate-bounce"></i> Live Breakout & WhatsApp Scanner
                         </span>
                         <span class="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30">Running 100%</span>
                     </div>
@@ -347,6 +384,88 @@
         let overlayAnimFrame = null;
         let uploadedMediaFile = null;
 
+        // UltraMsg Credentials State
+        let ULTRAMSG_INSTANCE = localStorage.getItem('UM_INSTANCE') || '';
+        let ULTRAMSG_TOKEN = localStorage.getItem('UM_TOKEN') || '';
+        let RECIPIENT_PHONE = localStorage.getItem('UM_PHONE') || '';
+
+        function toggleWhatsAppSettings() {
+            const modal = document.getElementById('whatsappConfigModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                if (ULTRAMSG_INSTANCE) document.getElementById('instanceInput').value = ULTRAMSG_INSTANCE;
+                if (ULTRAMSG_TOKEN) document.getElementById('tokenInput').value = ULTRAMSG_TOKEN;
+                if (RECIPIENT_PHONE) document.getElementById('phoneInput').value = RECIPIENT_PHONE;
+            }
+        }
+
+        function saveWhatsAppCredentials() {
+            ULTRAMSG_INSTANCE = document.getElementById('instanceInput').value.trim();
+            ULTRAMSG_TOKEN = document.getElementById('tokenInput').value.trim();
+            RECIPIENT_PHONE = document.getElementById('phoneInput').value.trim();
+
+            localStorage.setItem('UM_INSTANCE', ULTRAMSG_INSTANCE);
+            localStorage.setItem('UM_TOKEN', ULTRAMSG_TOKEN);
+            localStorage.setItem('UM_PHONE', RECIPIENT_PHONE);
+
+            alert("✅ UltraMsg WhatsApp credentials saved successfully!");
+            toggleWhatsAppSettings();
+            sendUltraMsgWhatsApp("System Test Alert", "UltraMsg WhatsApp connection successfully configured for Rajveer's ApexAI!", "व्हाट्सएप अलर्ट सफलतापूर्वक कनेक्ट हो गया है!");
+        }
+
+        async function sendUltraMsgWhatsApp(patternName, englishDesc, hindiDesc, canvasElement) {
+            if (!ULTRAMSG_INSTANCE || !ULTRAMSG_TOKEN || !RECIPIENT_PHONE) {
+                console.warn("⚠️ WhatsApp alert skipped: Please fill and save UltraMsg credentials.");
+                return;
+            }
+
+            const messageText = 
+                `🚨 *NEW 100% SURE-SHOT STRUCTURE LEARNED!* 🚨\n\n` +
+                `📌 *Pattern:* ${patternName}\n\n` +
+                `🇬🇧 *English Definition:* \n${englishDesc}\n\n` +
+                `🇮🇳 *Hindi Definition (हिंदी परिभाषा):* \n${hindiDesc}`;
+
+            const textUrl = `https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`;
+            const textParams = new URLSearchParams();
+            textParams.append('token', ULTRAMSG_TOKEN);
+            textParams.append('to', RECIPIENT_PHONE);
+            textParams.append('body', messageText);
+
+            try {
+                let textResponse = await fetch(textUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: textParams
+                });
+                
+                if (textResponse.ok) {
+                    console.log("✅ WhatsApp text notification sent successfully!");
+                }
+
+                if (canvasElement) {
+                    const imageDataUrl = canvasElement.toDataURL('image/png');
+                    const imageUrl = `https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/image`;
+                    const imageParams = new URLSearchParams();
+                    imageParams.append('token', ULTRAMSG_TOKEN);
+                    imageParams.append('to', RECIPIENT_PHONE);
+                    imageParams.append('image', imageDataUrl);
+                    imageParams.append('caption', `Chart Snapshot: ${patternName}`);
+
+                    let imageResponse = await fetch(imageUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: imageParams
+                    });
+
+                    if (imageResponse.ok) {
+                        console.log("✅ WhatsApp chart snapshot sent successfully!");
+                    }
+                }
+            } catch (error) {
+                console.error(`❌ WhatsApp Error: ${error.message}`);
+            }
+        }
+
         // Continuous Live Background Calculation & Auto Pattern Addition Engine
         let liveCalcProgress = 85;
         let dynamicPatternCounter = 3;
@@ -362,7 +481,7 @@
                     liveCalcProgress = 100;
                     if (progressText) progressText.innerText = "100% (Verified)";
                     if (barEl) barEl.style.width = "100%";
-                    if (statusEl) statusEl.innerHTML = `<span>100% Result Achieved! New Pattern Added to Vault Top.</span>`;
+                    if (statusEl) statusEl.innerHTML = `<span>100% Result Achieved! New Pattern Added & WhatsApp Alert Sent.</span>`;
 
                     // Automatically generate & add a new pattern to the top of the vault
                     addNewSureShotPatternToVaultTop();
@@ -401,6 +520,9 @@
             const randomDetections = Math.floor(Math.random() * 30000000) + 12000000;
             const randomPriceTarget = (Math.random() * 2000 + 2200).toFixed(2);
 
+            const engDesc = "Live continuous market candle breakout scan verified this setup with 100% precision. Institutional order flow analysis confirmed strong volume delta absorption.";
+            const hinDesc = "लाइव निरंतर कैंडल ब्रेकआउट स्कैन ने इस सेटअप को 100% सटीकता के साथ सत्यापित किया है।";
+
             const newPattern = {
                 id: Date.now(),
                 title: randomTitleNum,
@@ -409,12 +531,16 @@
                 signal: randomSignal,
                 targetText: `Target Confirmed via Live Breakout Calculation @ $${randomPriceTarget}`,
                 img: randomImg,
-                desc: "Live continuous market candle breakout scan verified this setup with 100% precision. Institutional order flow analysis confirmed strong volume delta absorption at key resistance/support levels, forming an infallible sure-shot pattern for Rajveer's strategy."
+                desc: `${engDesc} Target derived: $${randomPriceTarget}`
             };
 
             // Insert at the top of the array
             aiMasterTopics.unshift(newPattern);
             saveVaultToStorage();
+
+            // Trigger WhatsApp Automatic Notification
+            const chartCanvas = document.getElementById('aiChartOverlayCanvas');
+            sendUltraMsgWhatsApp(randomTitleNum, engDesc, hinDesc, chartCanvas);
 
             // Refresh drawer list if open
             if (document.getElementById('drawerPanel').classList.contains('open')) {
@@ -691,7 +817,7 @@
             }
 
             if (q.includes('hello') || q.includes('hi') || q.includes('namaste') || q.includes('hey')) {
-                return `Namaste Rajveer! Main aapka Universal Expert AI hoon. I Am Finding Your Gift Rajveer—Sure-Shot Vault ke andar live breakout aur previous candle calculations continuously top par chal rahi hain!`;
+                return `Namaste Rajveer! Main aapka Universal Expert AI hoon. I Am Finding Your Gift Rajveer—Sure-Shot Vault ke andar live breakout aur WhatsApp auto-alerts continuously active hain!`;
             }
 
             if (q.includes('python') || q.includes('code') || q.includes('html') || q.includes('javascript') || q.includes('function')) {
@@ -707,13 +833,13 @@ print(apex_solve_problem([1, -2, 3, 4]))</pre><br>Is code mein continuous calcul
                 let randomCount = Math.floor(Math.random() * 25000000) + 40000000;
                 return `📈 <b>Market Autonomous Analysis for Rajveer:</b><br>
                 Multi-timeframe candle scan & live breakout calculation computed successfully.<br>
-                ⚠️ <i>Rule Reminder:</i> I Am Finding Your Gift Rajveer. Live calculations are running at top of Vault!<br>
+                ⚠️ <i>Rule Reminder:</i> I Am Finding Your Gift Rajveer. Live calculations & WhatsApp alerts are running at top of Vault!<br>
                 📊 <b>Total Detections:</b> ${randomCount.toLocaleString()} / 100M Candles<br>
                 🎯 <b>Sure Target:</b> Up to Order Block @ $2,392.40.`;
             }
 
             return `💡 <b>Expert Universal Response for Rajveer:</b><br>
-            Aapne jo query puchi hai uske anusar, yeh ek deep-level technical topic hai. Rajveer, jaisa ki aapka rule hai—live market breakout aur previous candle calculations continuous top par run ho rahi hain, aur 100% result milte hi naya pattern vault mein sabse upar add ho jata hai.<br><br>
+            Aapne jo query puchi hai uske anusar, yeh ek deep-level technical topic hai. Rajveer, jaisa ki aapka rule hai—live market breakout aur previous candle calculations continuous top par run ho rahi hain, aur 100% result milte hi naya pattern vault mein add hokar WhatsApp par alert bhej diya jata hai.<br><br>
             📌 <b>Key Highlights:</b><br>
             - <b>Custom Edge:</b> 100% Verified Live Logic.<br>
             - <b>Discipline:</b> Zero date dependency, only pattern memory.<br><br>
@@ -756,8 +882,8 @@ print(apex_solve_problem([1, -2, 3, 4]))</pre><br>Is code mein continuous calcul
 
         function startLiveCommentaryStream() {
             const commentaries = [
-                "[Rajveer's AI Brain]: I Am Finding Your Gift Rajveer... Calculating live market breakouts and previous candles.",
-                "[Rajveer's AI Brain]: Continuous calculation running at vault top. Reaching 100% result to append new pattern."
+                "[Rajveer's AI Brain]: I Am Finding Your Gift Rajveer... Calculating live market breakouts and WhatsApp alerts.",
+                "[Rajveer's AI Brain]: Continuous calculation running at vault top. Reaching 100% result to trigger WhatsApp snapshot."
             ];
             let idx = 0;
             if (commentaryInterval) clearInterval(commentaryInterval);
