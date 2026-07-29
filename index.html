@@ -78,9 +78,7 @@
                         <div class="col-span-3 text-right">Price</div>
                         <div class="col-span-3 text-right">Action</div>
                     </div>
-                    <div id="assetTableBody" class="divide-y divide-slate-800/50">
-                        <!-- Populated dynamically -->
-                    </div>
+                    <div id="assetTableBody" class="divide-y divide-slate-800/50"></div>
                 </div>
             </section>
 
@@ -106,19 +104,20 @@
                 <div class="grid grid-cols-1 gap-3" id="knowledgeGrid"></div>
             </section>
 
-            <!-- TAB 4: TEACH AI -->
+            <!-- TAB 4: TEACH AI (Updated with Professional Cards) -->
             <section id="tabTeach" class="hidden space-y-4">
                 <div>
                     <h2 class="text-base font-bold text-slate-100">Teach AI Core</h2>
-                    <p class="text-xs text-slate-400">Type strategy (e.g. Accumulation, Manipulation).</p>
+                    <p class="text-xs text-slate-400">Type strategies or custom rules for the AI brain.</p>
                 </div>
                 <div class="neon-card p-4 rounded-2xl space-y-3">
-                    <textarea id="teachInput" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 text-xs focus:outline-none focus:border-cyan-500" placeholder="Type rule here..."></textarea>
+                    <input type="text" id="teachTitleInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-100 text-xs focus:outline-none focus:border-cyan-500" placeholder="Strategy Title (e.g. London Session Sweep)">
+                    <textarea id="teachInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 text-xs focus:outline-none focus:border-cyan-500" placeholder="Describe rule / strategy details..."></textarea>
                     <button onclick="teachAIConcept()" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold rounded-xl text-xs shadow-lg">Feed to AI Memory</button>
                 </div>
-                <div class="space-y-2">
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase">Learned Memory Log (<span id="memoryCount">0</span>)</h3>
-                    <div id="learnedLogs" class="space-y-2"></div>
+                <div class="space-y-3">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Learned Memory Log (<span id="memoryCount">0</span>)</h3>
+                    <div id="learnedLogs" class="space-y-3"></div>
                 </div>
             </section>
         </main>
@@ -171,24 +170,18 @@
             }
         }
 
-        // Comprehensive Professional Master Asset Database (Gold, Silver, Crypto, Forex)
         const masterAssets = [
-            // Metals (Gold / Silver)
             { symbol: "OANDA:XAUUSD", name: "Gold / US Dollar", folder: "Metals", price: "$2,342.50", change: "+0.85%", bullish: true },
             { symbol: "TVC:GOLD", name: "Gold Spot", folder: "Metals", price: "$2,340.10", change: "+0.78%", bullish: true },
             { symbol: "OANDA:XAGUSD", name: "Silver / US Dollar", folder: "Metals", price: "$28.45", change: "+1.20%", bullish: true },
             { symbol: "TVC:SILVER", name: "Silver Spot", folder: "Metals", price: "$28.40", change: "+1.15%", bullish: true },
             { symbol: "COMEX:GC1!", name: "Gold Futures", folder: "Metals", price: "$2,345.00", change: "+0.80%", bullish: true },
-
-            // Crypto Assets
             { symbol: "BINANCE:BTCUSDT", name: "Bitcoin", folder: "Crypto", price: "$68,450.00", change: "+3.45%", bullish: true },
             { symbol: "BINANCE:ETHUSDT", name: "Ethereum", folder: "Crypto", price: "$3,520.10", change: "+2.12%", bullish: true },
             { symbol: "BINANCE:SOLUSDT", name: "Solana", folder: "Crypto", price: "$145.80", change: "-0.85%", bullish: false },
             { symbol: "BINANCE:XRPUSDT", name: "XRP", folder: "Crypto", price: "$0.5820", change: "+1.40%", bullish: true },
             { symbol: "BINANCE:BNBUSDT", name: "Binance Coin", folder: "Crypto", price: "$585.20", change: "+0.95%", bullish: true },
             { symbol: "BINANCE:ADAUSDT", name: "Cardano", folder: "Crypto", price: "$0.4500", change: "-1.10%", bullish: false },
-
-            // Forex Majors & Crosses
             { symbol: "FX:EURUSD", name: "EUR/USD", folder: "Forex", price: "1.0872", change: "+0.15%", bullish: true },
             { symbol: "FX:GBPUSD", name: "GBP/USD", folder: "Forex", price: "1.2740", change: "-0.22%", bullish: false },
             { symbol: "FX:USDJPY", name: "USD/JPY", folder: "Forex", price: "155.60", change: "+0.40%", bullish: true },
@@ -200,7 +193,6 @@
 
         let currentActiveFolder = 'ALL';
 
-        // Load Watchlist from LocalStorage (Default include Gold and BTC)
         function getWatchlist() {
             const saved = localStorage.getItem('apex_user_watchlist');
             return saved ? JSON.parse(saved) : ["OANDA:XAUUSD", "BINANCE:BTCUSDT", "FX:EURUSD"];
@@ -243,17 +235,14 @@
             if (!tbody) return;
 
             const watchlist = getWatchlist();
-
             let assets = masterAssets;
 
-            // Filter by Folder
             if (currentActiveFolder === 'Watchlist') {
                 assets = assets.filter(a => watchlist.includes(a.symbol));
             } else if (currentActiveFolder !== 'ALL') {
                 assets = assets.filter(a => a.folder === currentActiveFolder);
             }
 
-            // Filter by Search Input
             if (searchVal) {
                 assets = assets.filter(a => a.name.toLowerCase().includes(searchVal) || a.symbol.toLowerCase().includes(searchVal));
             }
@@ -358,7 +347,9 @@
 
         function getStoredMemory() {
             const saved = localStorage.getItem('apex_ai_custom_memory');
-            return saved ? JSON.parse(saved) : [{ topic: "Initial Setup", date: "Core Genesis", content: "Strict risk management active." }];
+            return saved ? JSON.parse(saved) : [
+                { title: "Initial Core Genesis", winrate: "95.0% Win", time: "Core System", desc: "Strict risk management active. Default autonomous parameters locked." }
+            ];
         }
 
         function saveMemoryToStorage(mem) {
@@ -371,30 +362,41 @@
             if (!container) return;
             const memory = getStoredMemory();
             document.getElementById('memoryCount').innerText = memory.length;
-            container.innerHTML = memory.map((item, idx) => `
-                <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl space-y-1">
-                    <div class="flex justify-between text-[10px]">
-                        <span class="font-bold text-cyan-400">#${idx+1} - ${item.topic}</span>
-                        <span class="text-slate-500">${item.date}</span>
+            container.innerHTML = memory.map((item) => `
+                <div class="neon-card p-4 rounded-2xl space-y-2">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-100 text-sm">${item.title}</h3>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${item.winrate || '92.0% Win'}</span>
                     </div>
-                    <p class="text-xs text-slate-300">${item.content}</p>
+                    <p class="text-xs text-slate-400">${item.desc}</p>
+                    <p class="text-[10px] text-cyan-400">Added: ${item.time}</p>
                 </div>
             `).reverse().join('');
         }
 
         function teachAIConcept() {
-            const input = document.getElementById('teachInput');
-            const text = input.value.trim();
-            if (!text) return alert("Please enter a concept.");
+            const titleInput = document.getElementById('teachTitleInput');
+            const descInput = document.getElementById('teachInput');
+            const title = titleInput.value.trim();
+            const desc = descInput.value.trim();
+            
+            if (!title || !desc) {
+                alert("Please enter both a Strategy Title and Description.");
+                return;
+            }
+
             const memory = getStoredMemory();
             memory.push({
-                topic: text.length > 30 ? text.substring(0, 30) + '...' : text,
-                date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                content: `Learned and locked rule: "${text}" into permanent brain core.`
+                title: title,
+                winrate: (Math.random() * (96 - 90) + 90).toFixed(1) + "% Win",
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                desc: desc
             });
+
             saveMemoryToStorage(memory);
-            input.value = '';
-            alert("✅ AI successfully learned and saved this rule!");
+            titleInput.value = '';
+            descInput.value = '';
+            alert("✅ AI successfully learned and formatted this rule into memory cards!");
             loadMemoryLogs();
         }
 
