@@ -26,9 +26,9 @@
         .slide-drawer.open {
             transform: translateX(0);
         }
-        /* Mobile Viewport Fix with Safe Area */
+        /* Mobile Dynamic Viewport Height Fix for iOS Safari */
         html, body {
-            height: 100%;
+            height: 100dvh;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -36,13 +36,13 @@
         }
     </style>
 </head>
-<body class="flex flex-col h-screen w-screen overflow-hidden antialiased">
+<body class="flex flex-col h-[100dvh] w-screen overflow-hidden antialiased">
 
     <!-- Background Flame Canvas -->
     <canvas id="flameCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-20"></canvas>
 
-    <!-- MAIN APP WRAPPER -->
-    <div class="relative z-10 flex flex-col h-full w-full overflow-hidden pb-16">
+    <!-- MAIN APP WRAPPER (Leaving space for bottom nav) -->
+    <div class="relative z-10 flex flex-col h-full w-full overflow-hidden pb-14">
         
         <!-- Top Header -->
         <header class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0">
@@ -131,7 +131,7 @@
                 <div class="space-y-3 pb-6" id="aiAnalysisGrid"></div>
             </section>
 
-            <!-- TAB 4: ADVANCED EXPERT AI CHAT (100% FIXED VISIBILITY) -->
+            <!-- TAB 4: ADVANCED EXPERT AI CHAT (FIXED PADDING & LAYOUT) -->
             <section id="tabTeach" class="absolute inset-0 hidden flex flex-col p-2 space-y-1 overflow-hidden">
                 <div class="flex items-center justify-between shrink-0 px-1 py-1">
                     <div>
@@ -140,7 +140,7 @@
                     <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">Active</span>
                 </div>
 
-                <!-- Chat Box Container with Safe Bottom Spacing -->
+                <!-- Chat Box Container -->
                 <div class="neon-card rounded-2xl p-2.5 flex-1 flex flex-col border border-slate-800 overflow-hidden relative mb-1">
                     
                     <!-- Scrollable Messages Area -->
@@ -148,7 +148,7 @@
                         <div class="flex items-start space-x-2">
                             <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
                             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl rounded-tl-none space-y-1.5 text-slate-200">
-                                <p>Namaste! Mera expert reasoning brain fully activate ho chuka hai. Aap mujhse koi bhi sawal pooch sakte hain.</p>
+                                <p>Namaste! Mera expert reasoning brain fully activate ho chuka hai. Aap mujhse pooch sakte hain ki maine kya seekha hai ya koi bhi trading pattern discuss kar sakte hain.</p>
                             </div>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                             <i class="fa-solid fa-camera text-xs"></i>
                             <input type="file" id="mediaUploadInput" accept="image/*" onchange="handleMediaSelected(event)" class="hidden">
                         </label>
-                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Poochiye koi bhi sawal..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Poochiye kya seekha tumne..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                         <button onclick="sendChatMessage()" class="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center shrink-0 shadow-lg">
                             <i class="fa-solid fa-paper-plane text-[10px]"></i>
                         </button>
@@ -512,11 +512,18 @@
         function generateExpertAIResponse(query) {
             const q = query.toLowerCase();
             
-            if (q.includes('my name') || q.includes('mera naam')) {
-                return `Aapne abhi tak mujhe apna naam nahi bataya hai! Aapka naam kya hai? Main ise yaad rakhunga.`;
+            // Smart recognition for learning/vault queries
+            if (q.includes('seekha') || q.includes('kya seekha') || q.includes('vault') || q.includes('patterns') || q.includes('kya-kya')) {
+                let responseHtml = `🧠 <b>Maine Aapke Sure-Shot Vault se yeh patterns seekhe hain:</b><br><ul class="list-disc pl-4 mt-1 space-y-1">`;
+                aiMasterTopics.forEach(t => {
+                    responseHtml += `<li><b>${t.title}</b> (${t.winrate} Win-Rate) - ${t.targetText}</li>`;
+                });
+                responseHtml += `</ul><br>Aap Sure-Shot Vault button par click karke details dekh sakte hain!`;
+                return responseHtml;
             }
+
             if (q.includes('hello') || q.includes('hi') || q.includes('namaste')) {
-                return `Namaste! Mera expert reasoning brain active hai. Aap mujhse koi bhi sawal pooch sakte hain ya apna naam bata sakte hain.`;
+                return `Namaste! Mera expert reasoning brain active hai. Aap mujhse pooch sakte hain ki maine kya seekha hai ya koi bhi trading setup analyze karwa sakte hain.`;
             }
 
             let randomCount = Math.floor(Math.random() * 25000000) + 40000000;
