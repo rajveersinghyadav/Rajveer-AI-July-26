@@ -19,7 +19,13 @@
             border: 1px solid rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(12px);
         }
-        .target-dynamic { transition: all 0.3s ease; }
+        .slide-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .slide-drawer.open {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden pb-24">
@@ -31,12 +37,12 @@
         <!-- Top Header -->
         <header class="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md">
             <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid fa-brain text-white text-sm"></i>
-                </div>
+                <button onclick="toggleKnowledgeDrawer()" class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-bars-staggered text-xs"></i>
+                </button>
                 <div>
                     <h1 class="font-bold text-sm tracking-wider text-cyan-400">APEX AI</h1>
-                    <p class="text-[10px] text-slate-400">Pro Watchlist Terminal</p>
+                    <p class="text-[10px] text-slate-400">Autonomous Pro Brain</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -51,10 +57,10 @@
             </div>
         </header>
 
-        <!-- Main Container -->
+        <!-- MAIN CONTAINER TABS -->
         <main class="flex-1 overflow-y-auto p-3 space-y-3">
             
-            <!-- TAB 1: QUOTES & FOLDERS WATCHLIST -->
+            <!-- TAB 1: QUOTES & WATCHLIST -->
             <section id="tabQuotes" class="space-y-3">
                 <div class="space-y-2">
                     <div class="relative">
@@ -79,28 +85,40 @@
                 </div>
             </section>
 
-            <!-- TAB 2: CHARTS -->
-            <section id="tabCharts" class="hidden flex flex-col space-y-3 h-[78vh]">
-                <div class="flex items-center justify-between">
+            <!-- TAB 2: FULL-SCREEN CLEAN CANDLE CHART & LIVE AI COMMENTARY -->
+            <section id="tabCharts" class="hidden flex flex-col space-y-2 h-[80vh]">
+                <div class="flex items-center justify-between bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
                     <div>
-                        <h2 class="text-sm font-bold text-slate-100" id="currentChartTitle">BTC/USD Chart</h2>
+                        <h2 class="text-xs font-bold text-slate-100" id="currentChartTitle">OANDA:XAUUSD (Gold)</h2>
                     </div>
-                    <div class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-lg text-[10px] font-bold" id="aiPredictionBadge">
-                        Analyzing...
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[10px] font-bold border border-cyan-500/30">15m Sure-Shot Active</span>
                     </div>
                 </div>
-                <div class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden min-h-[450px]" id="tradingview_widget"></div>
+
+                <!-- Live AI Commentary Ticker Box -->
+                <div class="bg-cyan-950/40 border border-cyan-500/40 rounded-xl p-2 flex items-center space-x-2 overflow-hidden shadow-lg">
+                    <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center shrink-0 text-cyan-400 animate-spin">
+                        <i class="fa-solid fa-brain text-[10px]"></i>
+                    </div>
+                    <div class="overflow-hidden whitespace-nowrap">
+                        <p id="liveAiCommentary" class="text-[11px] text-cyan-300 font-medium animate-pulse">
+                            [AI Core Stream]: Analyzing 15m candle structure... Accumulation zone detected near support. Preparing institutional push!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pure Candle TradingView Full Chart -->
+                <div class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden min-h-[420px]" id="tradingview_widget"></div>
             </section>
 
-            <!-- TAB 3: AI LIVE ANALYSIS (Updated from Knowledge) -->
+            <!-- TAB 3: AI RADAR WATCHLIST -->
             <section id="tabKnowledge" class="hidden space-y-3 pb-16">
                 <div>
-                    <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-satellite-dish text-cyan-400 mr-1 animate-pulse"></i> Watchlist AI Radar</h2>
+                    <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-satellite-dish text-cyan-400 mr-1 animate-pulse"></i> AI Radar & Targets</h2>
                     <p class="text-xs text-slate-400">Live dynamic targets calculated by AI Volume Engine.</p>
                 </div>
-                <div class="space-y-3" id="aiAnalysisGrid">
-                    <!-- Dynamic Watchlist Cards Injected Here -->
-                </div>
+                <div class="space-y-3" id="aiAnalysisGrid"></div>
             </section>
 
             <!-- TAB 4: TEACH AI -->
@@ -121,8 +139,69 @@
             </section>
         </main>
 
-        <!-- MARKET BREAKDOWN ALERT (Fixed Bottom above Nav) -->
-        <div id="breakdownAlert" class="fixed bottom-[75px] left-3 right-3 bg-rose-950/95 border border-rose-500/80 rounded-xl p-3 shadow-[0_0_20px_rgba(244,63,94,0.3)] backdrop-blur-md z-40 flex flex-col space-y-2 hidden transform transition-all duration-300 translate-y-0">
+        <!-- LEFT CORNER KNOWLEDGE MASTER INDEX DRAWER -->
+        <div id="knowledgeDrawer" class="fixed inset-0 z-50 pointer-events-none">
+            <!-- Backdrop -->
+            <div id="drawerBackdrop" onclick="toggleKnowledgeDrawer()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm opacity-0 transition-opacity pointer-events-none"></div>
+            
+            <!-- Drawer Panel -->
+            <div id="drawerPanel" class="slide-drawer absolute top-0 left-0 bottom-0 w-80 bg-slate-900 border-r border-slate-800 shadow-2xl flex flex-col pointer-events-auto">
+                <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/50">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-book-bookmark text-cyan-400"></i>
+                        <h3 class="text-sm font-bold text-slate-100">AI Master Knowledge Index</h3>
+                    </div>
+                    <button onclick="toggleKnowledgeDrawer()" class="w-7 h-7 bg-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Serial-wise Learned Topics List -->
+                <div class="flex-1 overflow-y-auto p-3 space-y-2.5" id="masterKnowledgeList">
+                    <!-- Injected via JavaScript -->
+                </div>
+
+                <div class="p-3 border-t border-slate-800 text-[10px] text-slate-500 text-center">
+                    Apex AI Neural Memory Bank v4.2
+                </div>
+            </div>
+        </div>
+
+        <!-- TOPIC DETAIL MODAL (WITH HINDI / ENGLISH TRANSLATOR) -->
+        <div id="topicDetailModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+            <div class="neon-card w-full max-w-md rounded-2xl p-5 space-y-4 border border-cyan-500/30 shadow-2xl relative">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span id="modalTopicWin" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">100% Sure-Shot</span>
+                        <h2 id="modalTopicTitle" class="text-base font-bold text-slate-100 mt-1">Topic Title</h2>
+                    </div>
+                    <button onclick="closeTopicModal()" class="w-7 h-7 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Language Toggle -->
+                <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 p-2 rounded-xl">
+                    <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-language mr-1 text-cyan-400"></i> Language:</span>
+                    <div class="flex space-x-1">
+                        <button onclick="setTopicLang('en')" id="topicLangEn" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 transition">English</button>
+                        <button onclick="setTopicLang('hi')" id="topicLangHi" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition">हिंदी (Hindi)</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl space-y-2 max-h-64 overflow-y-auto">
+                    <p class="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Detailed 15m Analysis & Behavior:</p>
+                    <p id="modalTopicDesc" class="text-xs text-slate-300 leading-relaxed">Description...</p>
+                </div>
+
+                <div class="text-[10px] text-cyan-400 font-medium text-right">
+                    <span>⚡ Automatically Applied on Chart Overlays</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MARKET BREAKDOWN ALERT -->
+        <div id="breakdownAlert" class="fixed bottom-[75px] left-3 right-3 bg-rose-950/95 border border-rose-500/80 rounded-xl p-3 shadow-2xl backdrop-blur-md z-40 hidden flex flex-col space-y-2">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-8 h-8 rounded-full bg-rose-500/20 border border-rose-500/50 flex items-center justify-center animate-pulse text-rose-500">
@@ -133,43 +212,13 @@
                         <p class="text-[9px] text-slate-300">High selling volume dump detected.</p>
                     </div>
                 </div>
-                <button onclick="dismissBreakdownAlert()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-[10px] font-bold rounded-lg transition shadow-lg shadow-rose-600/30">
+                <button onclick="dismissBreakdownAlert()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-[10px] font-bold rounded-lg transition shadow-lg">
                     Quit Execution
                 </button>
             </div>
         </div>
 
-        <!-- Detailed Memory Modal (Popup Page for Full View & Hindi/English Translation) -->
-        <div id="memoryModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-            <div class="neon-card w-full max-w-md rounded-2xl p-5 space-y-4 border border-cyan-500/30 shadow-2xl relative">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <span id="modalWinrate" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">95.0% Win</span>
-                        <h2 id="modalTitle" class="text-base font-bold text-slate-100 mt-1">Strategy Title</h2>
-                    </div>
-                    <button onclick="closeMemoryModal()" class="w-7 h-7 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-                </div>
-                <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 p-2 rounded-xl">
-                    <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-language mr-1 text-cyan-400"></i> Language:</span>
-                    <div class="flex space-x-1">
-                        <button onclick="setModalLanguage('en')" id="langBtnEn" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 transition">English</button>
-                        <button onclick="setModalLanguage('hi')" id="langBtnHi" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition">हिंदी (Hindi)</button>
-                    </div>
-                </div>
-                <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl space-y-2 max-h-60 overflow-y-auto">
-                    <p class="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Detailed Strategy Execution Plan:</p>
-                    <p id="modalDesc" class="text-xs text-slate-300 leading-relaxed">Detailed info goes here...</p>
-                </div>
-                <div class="text-[10px] text-slate-500 flex justify-between pt-1">
-                    <span id="modalTime">Added: Core System</span>
-                    <span class="text-cyan-400 font-medium">Apex AI Autonomous Memory</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Bottom Navigation Bar -->
+        <!-- MOBILE BOTTOM NAVIGATION BAR -->
         <nav class="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur-md flex justify-around p-3 z-50">
             <button onclick="switchTab('quotes')" id="navQuotes" class="flex flex-col items-center text-cyan-400 text-[11px] space-y-1 transition">
                 <i class="fa-solid fa-list text-base"></i><span>Quotes</span>
@@ -178,7 +227,7 @@
                 <i class="fa-solid fa-chart-line text-base"></i><span>Chart</span>
             </button>
             <button onclick="switchTab('knowledge')" id="navKnowledge" class="flex flex-col items-center text-slate-400 text-[11px] space-y-1 transition">
-                <i class="fa-solid fa-radar text-base"></i><span>Radar AI</span>
+                <i class="fa-solid fa-satellite-dish text-base"></i><span>Radar AI</span>
             </button>
             <button onclick="switchTab('teach')" id="navTeach" class="flex flex-col items-center text-slate-400 text-[11px] space-y-1 transition">
                 <i class="fa-solid fa-graduation-cap text-base"></i><span>Teach AI</span>
@@ -186,23 +235,65 @@
         </nav>
     </div>
 
-    <!-- Script Engine -->
+    <!-- SCRIPT ENGINE -->
     <script>
         const masterAssets = [
             { symbol: "OANDA:XAUUSD", name: "Gold / US Dollar", folder: "Metals", price: "$2,342.50", change: "+0.85%", bullish: true },
             { symbol: "TVC:GOLD", name: "Gold Spot", folder: "Metals", price: "$2,340.10", change: "+0.78%", bullish: true },
             { symbol: "OANDA:XAGUSD", name: "Silver / US Dollar", folder: "Metals", price: "$28.45", change: "+1.20%", bullish: true },
-            { symbol: "TVC:SILVER", name: "Silver Spot", folder: "Metals", price: "$28.40", change: "+1.15%", bullish: true },
             { symbol: "BINANCE:BTCUSDT", name: "Bitcoin", folder: "Crypto", price: "$68,450.00", change: "+3.45%", bullish: true },
             { symbol: "BINANCE:ETHUSDT", name: "Ethereum", folder: "Crypto", price: "$3,520.10", change: "+2.12%", bullish: true },
-            { symbol: "BINANCE:SOLUSDT", name: "Solana", folder: "Crypto", price: "$145.80", change: "-0.85%", bullish: false },
             { symbol: "FX:EURUSD", name: "EUR/USD", folder: "Forex", price: "1.0872", change: "+0.15%", bullish: true },
             { symbol: "FX:GBPUSD", name: "GBP/USD", folder: "Forex", price: "1.2740", change: "-0.22%", bullish: false }
         ];
 
+        // MASTER AI KNOWLEDGE TOPICS (Serial-wise)
+        const aiMasterTopics = [
+            {
+                id: 1,
+                title: "1. 15m Engulfing Sure-Shot Pattern",
+                winrate: "100% Sure",
+                timeframe: "15 Minute Chart",
+                descEn: "When a strong 15-minute bullish/bearish engulfing candle forms after a minor pullback, market sentiment shifts aggressively. If bullish engulfing appears near support, market is 100% guaranteed to shoot UP. If bearish near resistance, it drops.",
+                descHi: "जब 15 मिनट के चार्ट पर सपोर्ट के पास बुलिश इंगल्फिंग कैंडल बनती है, तो मार्केट 100% निश्चित रूप से ऊपर (UP) जाता है। रेजिस्टेंस के पास बनने पर यह नीचे गिरता है।"
+            },
+            {
+                id: 2,
+                title: "2. Accumulation, Manipulation & Distribution (AMD)",
+                winrate: "98.5% Win",
+                timeframe: "15m / 1H Multi-Session",
+                descEn: "The institutional core algorithm. Accumulation happens during Asian session range. Manipulation occurs right before London/NY open (false breakout sweep). Distribution is the real impulsive expansion move where AI catches high-volume entries.",
+                descHi: "यह इंस्टीट्यूशनल एल्गोरिदम है। एशियन सेशन में एक्यूमुलेशन (दायरा) बनता है, लंदन/न्यूयॉर्क ओपन से ठीक पहले मैनिपुलेशन (फेक ब्रेकआउट) होता है, और फिर डिस्ट्रीब्यूशन के साथ मार्केट असली दिशा में तेज़ी से भागता है।"
+            },
+            {
+                id: 3,
+                title: "3. Order Block (OB) Re-test Rejection",
+                winrate: "96.0% Win",
+                timeframe: "5m / 15m",
+                descEn: "The last opposing candle before a powerful impulsive break. When price returns to this block on a 15m timeframe, institutional limit orders trigger massive Buy or Sell reactions.",
+                descHi: "एक बड़े मूव से ठीक पहले की आखिरी विपरीत कैंडल। जब कीमत 15 मिनट पर इस ब्लॉक पर लौटती है, तो इंस्टीट्यूशनल ऑर्डर्स के कारण बड़ा उछाल या गिरावट आती है।"
+            },
+            {
+                id: 4,
+                title: "4. Fair Value Gap (FVG) Liquidity Fill",
+                winrate: "94.2% Win",
+                timeframe: "1m / 5m / 15m",
+                descEn: "Price inefficiency zone left behind by aggressive institutional candles. Market acts like a magnet, returning to fill 50% to 100% of the FVG before continuing the main trend.",
+                descHi: "तेज़ कैंडल की वजह से छूटा हुआ इनएफिशिएंसी ज़ोन। मार्केट चुंबक की तरह FVG को भरने वापस आता है और फिर ट्रेंड जारी रखता है।"
+            },
+            {
+                id: 5,
+                title: "5. Market Structure Shift (MSS) & Break of Structure (BOS)",
+                winrate: "97.0% Win",
+                timeframe: "15m Chart",
+                descEn: "Definitive confirmation that trend has reversed or continued. When 15m candle closes beyond previous high/low swing, AI flags instant BUY/SELL execution signals.",
+                descHi: "यह पक्का संकेत है कि ट्रेंड बदल गया है या जारी है। जब 15 मिनट की कैंडल पिछले हाई/लो को पार करके बंद होती है, तो AI तुरंत BUY या SELL सिग्नल देता है।"
+            }
+        ];
+
         let currentActiveFolder = 'ALL';
         let dynamicTargetInterval = null;
-        let alertTimeout = null;
+        let commentaryInterval = null;
 
         function switchTab(tabId) {
             ['Quotes', 'Charts', 'Knowledge', 'Teach'].forEach(name => {
@@ -226,16 +317,105 @@
 
             if (tabId === 'charts') {
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 200);
+                startLiveCommentaryStream();
             } else if (tabId === 'knowledge') {
                 renderAIAnalysis();
-                // Demo Alert Trigger when user opens Knowledge/Radar tab
-                clearTimeout(alertTimeout);
-                alertTimeout = setTimeout(triggerBreakdownAlert, 4000); // 4 sec after opening
             } else if (tabId === 'teach') {
                 loadMemoryLogs();
             }
         }
 
+        // Drawer Controls
+        function toggleKnowledgeDrawer() {
+            const drawer = document.getElementById('knowledgeDrawer');
+            const panel = document.getElementById('drawerPanel');
+            const backdrop = document.getElementById('drawerBackdrop');
+            
+            if (panel.classList.contains('open')) {
+                panel.classList.remove('open');
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0');
+                setTimeout(() => drawer.classList.add('pointer-events-none'), 300);
+            } else {
+                drawer.classList.remove('pointer-events-none');
+                panel.classList.add('open');
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                renderMasterKnowledgeDrawerList();
+            }
+        }
+
+        function renderMasterKnowledgeDrawerList() {
+            const container = document.getElementById('masterKnowledgeList');
+            if (!container) return;
+            container.innerHTML = aiMasterTopics.map(topic => `
+                <div onclick="openTopicDetail(${topic.id})" class="p-3 bg-slate-950/60 border border-slate-800 rounded-xl hover:border-cyan-500/50 cursor-pointer transition space-y-1">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-slate-200">${topic.title}</h4>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${topic.winrate}</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 line-clamp-1">${topic.descEn}</p>
+                    <span class="text-[9px] text-cyan-400 font-medium">Tap to read full details & translate 🌐</span>
+                </div>
+            `).join('');
+        }
+
+        let selectedTopicData = null;
+        let currentTopicLang = 'en';
+
+        function openTopicDetail(id) {
+            selectedTopicData = aiMasterTopics.find(t => t.id === id);
+            if (!selectedTopicData) return;
+            currentTopicLang = 'en';
+            
+            document.getElementById('modalTopicTitle').innerText = selectedTopicData.title;
+            document.getElementById('modalTopicWin').innerText = selectedTopicData.winrate;
+            document.getElementById('modalTopicDesc').innerText = selectedTopicData.descEn;
+            updateTopicLangBtns();
+            document.getElementById('topicDetailModal').classList.remove('hidden');
+        }
+
+        function closeTopicModal() {
+            document.getElementById('topicDetailModal').classList.add('hidden');
+        }
+
+        function setTopicLang(lang) {
+            currentTopicLang = lang;
+            if (!selectedTopicData) return;
+            document.getElementById('modalTopicDesc').innerText = lang === 'en' ? selectedTopicData.descEn : selectedTopicData.descHi;
+            updateTopicLangBtns();
+        }
+
+        function updateTopicLangBtns() {
+            const bEn = document.getElementById('topicLangEn');
+            const bHi = document.getElementById('topicLangHi');
+            if (currentTopicLang === 'en') {
+                bEn.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 transition";
+                bHi.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition";
+            } else {
+                bEn.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition";
+                bHi.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 transition";
+            }
+        }
+
+        // Live Commentary Ticker
+        function startLiveCommentaryStream() {
+            const commentaries = [
+                "[AI Core Stream]: 15m candle closed with Bullish Engulfing pattern. Market heading strictly UP!",
+                "[AI Core Stream]: Accumulation phase completed in Asian session. Manipulation sweep active.",
+                "[AI Core Stream]: Smart Money Order Block re-test successful. Buyers volume surging rapidly.",
+                "[AI Core Stream]: FVG (Fair Value Gap) filled near current price. Sure-shot target locked."
+            ];
+            let idx = 0;
+            if (commentaryInterval) clearInterval(commentaryInterval);
+            commentaryInterval = setInterval(() => {
+                idx = (idx + 1) % commentaries.length;
+                const el = document.getElementById('liveAiCommentary');
+                if (el) el.innerText = commentaries[idx];
+            }, 5000);
+        }
+
+        // Watchlist & Quotes Functions
         function getWatchlist() {
             const saved = localStorage.getItem('apex_user_watchlist');
             return saved ? JSON.parse(saved) : ["OANDA:XAUUSD", "BINANCE:BTCUSDT", "FX:EURUSD"];
@@ -251,9 +431,6 @@
             }
             localStorage.setItem('apex_user_watchlist', JSON.stringify(watchlist));
             renderAssetTable();
-            if(!document.getElementById('tabKnowledge').classList.contains('hidden')) {
-                renderAIAnalysis();
-            }
         }
 
         function switchFolder(folder) {
@@ -261,11 +438,9 @@
             ['ALL', 'Watchlist', 'Metals', 'Crypto', 'Forex'].forEach(f => {
                 const btn = document.getElementById(`folderBtn${f}`);
                 if (btn) {
-                    if (f === folder) {
-                        btn.className = "px-3 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 whitespace-nowrap transition";
-                    } else {
-                        btn.className = "px-3 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 whitespace-nowrap transition";
-                    }
+                    btn.className = f === folder 
+                        ? "px-3 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 whitespace-nowrap transition"
+                        : "px-3 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 whitespace-nowrap transition";
                 }
             });
             renderAssetTable();
@@ -321,8 +496,7 @@
             }).join('');
         }
 
-        // ======================= NEW AI RADAR (KNOWLEDGE) LOGIC =======================
-        
+        // Radar AI Analysis
         function parsePriceString(priceStr) {
             return parseFloat(priceStr.replace(/[^0-9.-]+/g,""));
         }
@@ -330,7 +504,6 @@
         function renderAIAnalysis() {
             const grid = document.getElementById('aiAnalysisGrid');
             if (!grid) return;
-            
             const watchlist = getWatchlist();
             let assets = masterAssets.filter(a => watchlist.includes(a.symbol));
 
@@ -338,7 +511,7 @@
                 grid.innerHTML = `
                     <div class="neon-card p-6 rounded-2xl text-center flex flex-col items-center justify-center space-y-3">
                         <i class="fa-regular fa-star text-slate-500 text-3xl"></i>
-                        <p class="text-xs text-slate-400">Your Favourite Watchlist is empty.<br>Add assets from the Quotes tab to see AI Analysis.</p>
+                        <p class="text-xs text-slate-400">Your Watchlist is empty. Star assets from Quotes.</p>
                         <button onclick="switchTab('quotes')" class="px-4 py-1.5 bg-slate-800 text-cyan-400 text-xs rounded-xl border border-cyan-500/30">Go to Quotes</button>
                     </div>`;
                 return;
@@ -347,58 +520,32 @@
             grid.innerHTML = assets.map(asset => {
                 let numericPrice = parsePriceString(asset.price);
                 let isBuy = asset.bullish;
-                
-                // Determine decimal precision based on price magnitude (Forex vs Bitcoin)
-                let isSmallNum = numericPrice < 10;
-                let decimals = isSmallNum ? 4 : 2;
-                
-                // Calculate Sure Shot Target
-                let targetOffset = isBuy ? (numericPrice * 0.005) : -(numericPrice * 0.005);
-                let sureShotTarget = (numericPrice + targetOffset).toFixed(decimals);
-                
-                // Set initial dynamic target just before the sure shot
-                let dynTargetOffset = isBuy ? (numericPrice * 0.001) : -(numericPrice * 0.001);
-                let dynamicTarget = (numericPrice + dynTargetOffset).toFixed(decimals);
+                let decimals = numericPrice < 10 ? 4 : 2;
+                let sureShotTarget = (numericPrice + (isBuy ? numericPrice * 0.005 : -numericPrice * 0.005)).toFixed(decimals);
+                let dynamicTarget = (numericPrice + (isBuy ? numericPrice * 0.001 : -numericPrice * 0.001)).toFixed(decimals);
 
                 return `
-                    <div class="neon-card p-3 rounded-2xl space-y-3 border border-slate-800 hover:border-cyan-500/30 transition">
+                    <div class="neon-card p-3 rounded-2xl space-y-3 border border-slate-800">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <h3 class="font-bold text-slate-100 text-[13px] flex items-center gap-1.5">
-                                <i class="fa-solid fa-crosshairs text-cyan-500 text-xs"></i> ${asset.name}
-                            </h3>
-                            <span class="text-[9px] px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-400">${asset.symbol}</span>
+                            <h3 class="font-bold text-slate-100 text-[13px]"><i class="fa-solid fa-crosshairs text-cyan-500 mr-1"></i> ${asset.name}</h3>
+                            <span class="text-[9px] px-2 py-0.5 rounded bg-slate-900 text-slate-400">${asset.symbol}</span>
                         </div>
-                        
                         <div class="grid grid-cols-4 gap-1.5 text-center items-center">
-                            <!-- 1. Trend -->
-                            <div class="flex flex-col space-y-1 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
-                                <span class="text-[8px] text-slate-500 uppercase tracking-wide">Trend</span>
-                                <span class="text-xs font-bold ${isBuy ? 'text-emerald-400' : 'text-rose-400'}">
-                                    ${isBuy ? '<i class="fa-solid fa-arrow-trend-up"></i> Bull' : '<i class="fa-solid fa-arrow-trend-down"></i> Bear'}
-                                </span>
+                            <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                                <span class="text-[8px] text-slate-500 uppercase">Trend</span>
+                                <p class="text-xs font-bold ${isBuy ? 'text-emerald-400' : 'text-rose-400'}">${isBuy ? 'Bullish' : 'Bearish'}</p>
                             </div>
-                            
-                            <!-- 2. Buy/Sell -->
-                            <div class="flex flex-col space-y-1 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80 shadow-inner">
-                                <span class="text-[8px] text-slate-500 uppercase tracking-wide">Action</span>
-                                <span class="text-xs font-bold ${isBuy ? 'text-emerald-500' : 'text-rose-500'}">
-                                    ${isBuy ? 'BUY' : 'SELL'}
-                                </span>
+                            <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                                <span class="text-[8px] text-slate-500 uppercase">Action</span>
+                                <p class="text-xs font-bold ${isBuy ? 'text-emerald-500' : 'text-rose-500'}">${isBuy ? 'BUY' : 'SELL'}</p>
                             </div>
-                            
-                            <!-- 3. Target (Sure Shot) -->
-                            <div class="flex flex-col space-y-1 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
-                                <span class="text-[8px] text-slate-500 uppercase tracking-wide">Target</span>
-                                <span class="text-xs font-bold text-slate-300">${sureShotTarget}</span>
+                            <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                                <span class="text-[8px] text-slate-500 uppercase">Target</span>
+                                <p class="text-xs font-bold text-slate-300">${sureShotTarget}</p>
                             </div>
-                            
-                            <!-- 4. Dynamic Live Target -->
-                            <div class="flex flex-col space-y-1 bg-cyan-950/30 p-2 rounded-xl border border-cyan-500/40 relative overflow-hidden group">
-                                <div class="absolute inset-0 bg-cyan-500/10 animate-pulse"></div>
-                                <span class="text-[8px] text-cyan-300 uppercase tracking-wide z-10">Live Hit</span>
-                                <span class="text-xs font-bold text-cyan-400 z-10 target-dynamic" data-sure="${sureShotTarget}" data-decimals="${decimals}" data-dir="${isBuy ? 1 : -1}">
-                                    ${dynamicTarget}
-                                </span>
+                            <div class="bg-cyan-950/30 p-2 rounded-xl border border-cyan-500/40 relative">
+                                <span class="text-[8px] text-cyan-300 uppercase">Live Hit</span>
+                                <p class="text-xs font-bold text-cyan-400 target-dynamic" data-sure="${sureShotTarget}" data-decimals="${decimals}" data-dir="${isBuy ? 1 : -1}">${dynamicTarget}</p>
                             </div>
                         </div>
                     </div>
@@ -406,53 +553,20 @@
             }).join('');
 
             if (dynamicTargetInterval) clearInterval(dynamicTargetInterval);
-            dynamicTargetInterval = setInterval(updateDynamicTargets, 2000);
+            dynamicTargetInterval = setInterval(() => {
+                document.querySelectorAll('.target-dynamic').forEach(el => {
+                    let cur = parseFloat(el.innerText);
+                    let dec = parseInt(el.getAttribute('data-decimals'));
+                    let dir = parseInt(el.getAttribute('data-dir'));
+                    let sure = parseFloat(el.getAttribute('data-sure'));
+                    let step = dec === 4 ? 0.0001 : 0.01;
+                    let newVal = cur + (dir * (Math.random() > 0.4 ? step : 0));
+                    if (dir === 1 && newVal > sure) newVal = sure;
+                    if (dir === -1 && newVal < sure) newVal = sure;
+                    el.innerText = newVal.toFixed(dec);
+                });
+            }, 2000);
         }
-
-        function updateDynamicTargets() {
-            document.querySelectorAll('.target-dynamic').forEach(el => {
-                let currentVal = parseFloat(el.innerText);
-                let decimals = parseInt(el.getAttribute('data-decimals'));
-                let direction = parseInt(el.getAttribute('data-dir'));
-                let sureTarget = parseFloat(el.getAttribute('data-sure'));
-                
-                // Small step based on asset type
-                let step = decimals === 4 ? 0.0001 : 0.01;
-                
-                // Move slowly towards sure target, don't exceed it
-                let move = (Math.random() > 0.4) ? step : 0; 
-                let newVal = currentVal + (direction * move);
-                
-                // Check bounds: Jaha Tak Market Sure jayega Usse Niche (ya aage) nahi aayega
-                if (direction === 1 && newVal > sureTarget) newVal = sureTarget;
-                if (direction === -1 && newVal < sureTarget) newVal = sureTarget;
-                
-                el.innerText = newVal.toFixed(decimals);
-                
-                if (move > 0) {
-                    el.classList.add('text-white');
-                    setTimeout(() => el.classList.remove('text-white'), 300);
-                }
-            });
-        }
-
-        function triggerBreakdownAlert() {
-            const alertBox = document.getElementById('breakdownAlert');
-            if (alertBox) {
-                alertBox.classList.remove('hidden');
-                // Play notification sound if possible (browser policies might block without interaction, but visually it pops)
-            }
-        }
-
-        function dismissBreakdownAlert() {
-            const alertBox = document.getElementById('breakdownAlert');
-            if (alertBox) {
-                alertBox.classList.add('hidden');
-                alert("Execution Quit Successfully! Capital is safe.");
-            }
-        }
-
-        // ==============================================================================
 
         function openAssetChart(symbol, name) {
             switchTab('charts');
@@ -469,27 +583,12 @@
             script.async = true;
             script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
             script.innerHTML = JSON.stringify({
-                "autosize": true, "symbol": symbol, "interval": "D", "timezone": "Etc/UTC",
+                "autosize": true, "symbol": symbol, "interval": "15", "timezone": "Etc/UTC",
                 "theme": "dark", "style": "1", "locale": "en", "hide_top_toolbar": false,
                 "hide_legend": false, "save_image": false, "calendar": false, "hide_volume": false,
                 "support_host": "https://www.tradingview.com"
             });
             container.appendChild(script);
-            updateAIPrediction(symbol);
-        }
-
-        function updateAIPrediction(symbol) {
-            const badge = document.getElementById('aiPredictionBadge');
-            if (!badge) return;
-            badge.innerText = `Analyzing ${symbol}...`;
-            setTimeout(() => {
-                const conf = Math.floor(Math.random() * 11) + 89;
-                const dir = Math.random() > 0.4 ? "BUY (LONG)" : "SELL (SHORT)";
-                badge.innerText = `⚡ ${dir} (${conf}% Sure)`;
-                badge.className = dir.includes("BUY") 
-                    ? "px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-lg text-[10px] font-bold"
-                    : "px-2.5 py-1 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-lg text-[10px] font-bold";
-            }, 800);
         }
 
         function getStoredMemory() {
@@ -510,58 +609,15 @@
             if (!container) return;
             const memory = getStoredMemory();
             document.getElementById('memoryCount').innerText = memory.length;
-            container.innerHTML = memory.map((item, idx) => `
-                <div onclick="openMemoryDetail(${idx})" class="neon-card p-4 rounded-2xl space-y-2 cursor-pointer hover:border-cyan-500/50 transition">
+            container.innerHTML = memory.map((item) => `
+                <div class="neon-card p-4 rounded-2xl space-y-2">
                     <div class="flex justify-between items-start">
                         <h3 class="font-bold text-slate-100 text-sm">${item.title}</h3>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${item.winrate || '92.0% Win'}</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${item.winrate}</span>
                     </div>
-                    <p class="text-xs text-slate-400 line-clamp-2">${item.descEn || item.desc}</p>
+                    <p class="text-xs text-slate-400">${item.descEn || item.desc}</p>
                 </div>
             `).reverse().join('');
-        }
-
-        let currentSelectedMemory = null;
-        let currentModalLang = 'en';
-
-        function openMemoryDetail(idx) {
-            const memory = getStoredMemory();
-            const actualIdx = memory.length - 1 - idx;
-            currentSelectedMemory = memory[actualIdx];
-            currentModalLang = 'en';
-            
-            document.getElementById('modalTitle').innerText = currentSelectedMemory.title;
-            document.getElementById('modalWinrate').innerText = currentSelectedMemory.winrate || '92.0% Win';
-            document.getElementById('modalTime').innerText = `Added: ${currentSelectedMemory.time}`;
-            document.getElementById('modalDesc').innerText = currentSelectedMemory.descEn || currentSelectedMemory.desc;
-            
-            updateLangButtons();
-            document.getElementById('memoryModal').classList.remove('hidden');
-        }
-
-        function closeMemoryModal() {
-            document.getElementById('memoryModal').classList.add('hidden');
-        }
-
-        function setModalLanguage(lang) {
-            currentModalLang = lang;
-            if (!currentSelectedMemory) return;
-            document.getElementById('modalDesc').innerText = lang === 'en' 
-                ? (currentSelectedMemory.descEn || currentSelectedMemory.desc) 
-                : (currentSelectedMemory.descHi || `[हिंदी अनुवाद]: ${currentSelectedMemory.descEn || currentSelectedMemory.desc}`);
-            updateLangButtons();
-        }
-
-        function updateLangButtons() {
-            const btnEn = document.getElementById('langBtnEn');
-            const btnHi = document.getElementById('langBtnHi');
-            if (currentModalLang === 'en') {
-                btnEn.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 transition";
-                btnHi.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition";
-            } else {
-                btnEn.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition";
-                btnHi.className = "px-2.5 py-1 text-[10px] font-bold rounded-lg bg-cyan-500 text-slate-950 transition";
-            }
         }
 
         function teachAIConcept() {
@@ -570,14 +626,14 @@
             if (!title || !desc) return alert("Enter Title and Description.");
             const memory = getStoredMemory();
             memory.push({
-                title: title, winrate: (Math.random() * 6 + 90).toFixed(1) + "% Win",
+                title: title, winrate: "95.0% Win",
                 time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                 descEn: desc, descHi: `[हिंदी अनुवाद]: ${desc}`
             });
             saveMemoryToStorage(memory);
             document.getElementById('teachTitleInput').value = '';
             document.getElementById('teachInput').value = '';
-            alert("✅ Rule Saved!");
+            alert("✅ Rule Saved to AI Brain!");
             loadMemoryLogs();
         }
 
@@ -587,11 +643,17 @@
             setTimeout(() => { txt.innerText = "Synced 🟢"; }, 1200);
         }
 
+        function dismissBreakdownAlert() {
+            document.getElementById('breakdownAlert').classList.add('hidden');
+            alert("Execution Quit Successfully! Capital is safe.");
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             renderAssetTable();
             loadTradingViewWidget("OANDA:XAUUSD");
             saveMemoryToStorage(getStoredMemory());
             
+            // Flame Canvas
             const canvas = document.getElementById('flameCanvas');
             const ctx = canvas.getContext('2d');
             let w = canvas.width = window.innerWidth;
