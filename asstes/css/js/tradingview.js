@@ -3,10 +3,8 @@ function loadTradingViewWidget(symbol = "BINANCE:BTCUSDT") {
     const container = document.getElementById('tradingview_widget');
     if (!container) return;
 
-    // Clear previous widget if any
     container.innerHTML = '';
 
-    // Create TradingView script dynamically
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
@@ -30,8 +28,6 @@ function loadTradingViewWidget(symbol = "BINANCE:BTCUSDT") {
     });
 
     container.appendChild(script);
-
-    // Update AI Confidence prediction simulation based on selected asset
     updateAIPrediction(symbol);
 }
 
@@ -41,7 +37,7 @@ function updateAIPrediction(symbol) {
     
     badge.innerText = `AI Analyzing ${symbol}...`;
     setTimeout(() => {
-        const confidence = Math.floor(Math.random() * (99 - 88 + 1)) + 88; // 88% to 99% Sure Shot
+        const confidence = Math.floor(Math.random() * (99 - 88 + 1)) + 88;
         const direction = Math.random() > 0.4 ? "BUY (LONG)" : "SELL (SHORT)";
         badge.innerText = `⚡ AI Signal: ${direction} (${confidence}% Sure-Shot)`;
         badge.className = direction.includes("BUY") 
@@ -50,9 +46,7 @@ function updateAIPrediction(symbol) {
     }, 1000);
 }
 
-// Load default chart on startup
 window.addEventListener('DOMContentLoaded', () => {
-    // Small delay to ensure container is ready
     setTimeout(() => {
         loadTradingViewWidget("BINANCE:BTCUSDT");
     }, 300);
