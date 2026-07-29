@@ -4,40 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ApexAI Trader - Autonomous Crypto & Forex Brain</title>
-    <!-- Tailwind CSS CDN for Modern Fintech UI -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Styles -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden pb-20 md:pb-0">
 
     <!-- Dynamic Background Canvas -->
     <canvas id="flameCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
     <div class="relative z-10 flex flex-col h-screen">
         <!-- Top Navigation Bar -->
-        <header class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-md">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid fa-brain text-white text-xl"></i>
+        <header class="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-brain text-white text-sm"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg tracking-wider bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">APEX AI TRADER</h1>
-                    <p class="text-xs text-slate-400">Autonomous 24/7 Learning & Profit Engine</p>
+                    <h1 class="font-bold text-sm tracking-wider bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">APEX AI</h1>
+                    <p class="text-[10px] text-slate-400">Autonomous Trader</p>
                 </div>
             </div>
             
             <!-- Header Controls -->
-            <div class="flex items-center space-x-3">
-                <button id="cloudSyncBtn" onclick="syncWithGoogleDrive()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-medium rounded-lg border border-cyan-500/30 transition flex items-center space-x-2">
+            <div class="flex items-center space-x-2">
+                <button onclick="syncWithGoogleDrive()" class="px-2.5 py-1 bg-slate-800 text-cyan-400 text-xs rounded-lg border border-cyan-500/30 flex items-center space-x-1">
                     <i class="fa-brands fa-google-drive"></i>
-                    <span id="syncText">Connect Drive</span>
+                    <span id="syncText">Drive</span>
                 </button>
-                <div class="flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-950/50 border border-emerald-500/30 rounded-lg text-emerald-400 text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Brain: Active</span>
+                <div class="px-2 py-1 bg-emerald-950/50 border border-emerald-500/30 rounded-lg text-emerald-400 text-[10px] font-semibold flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Active</span>
                 </div>
             </div>
         </header>
@@ -45,37 +45,29 @@
         <!-- Main Workspace -->
         <div class="flex flex-1 overflow-hidden">
             
-            <!-- Sidebar Navigation -->
-            <aside class="w-64 border-r border-slate-800 bg-slate-900/40 backdrop-blur-md flex flex-col justify-between p-4 hidden md:flex">
+            <!-- Desktop Sidebar -->
+            <aside class="w-64 border-r border-slate-800 bg-slate-900/40 backdrop-blur-md flex-col justify-between p-4 hidden md:flex">
                 <div class="space-y-2">
                     <p class="text-xs font-semibold text-slate-500 px-3 uppercase tracking-wider">Navigation</p>
-                    <button onclick="switchTab('quotes')" id="navQuotes" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-medium transition">
-                        <i class="fa-solid fa-list-ul w-5"></i>
-                        <span>Quotes & Assets</span>
+                    <button onclick="switchTab('quotes')" id="navQuotesDesk" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-medium transition">
+                        <i class="fa-solid fa-list-ul w-5"></i><span>Quotes & Assets</span>
                     </button>
-                    <button onclick="switchTab('charts')" id="navCharts" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium transition">
-                        <i class="fa-solid fa-chart-candlestick w-5"></i>
-                        <span>TradingView Chart</span>
+                    <button onclick="switchTab('charts')" id="navChartsDesk" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium transition">
+                        <i class="fa-solid fa-chart-candlestick w-5"></i><span>TradingView Chart</span>
                     </button>
-                    <button onclick="switchTab('knowledge')" id="navKnowledge" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium transition">
-                        <i class="fa-solid fa-book-bookmark w-5"></i>
-                        <span>AI-Knowledge</span>
+                    <button onclick="switchTab('knowledge')" id="navKnowledgeDesk" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium transition">
+                        <i class="fa-solid fa-book-bookmark w-5"></i><span>AI-Knowledge</span>
                     </button>
-                    <button onclick="switchTab('teach')" id="navTeach" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium transition">
-                        <i class="fa-solid fa-graduation-cap w-5"></i>
-                        <span>Teach AI</span>
+                    <button onclick="switchTab('teach')" id="navTeachDesk" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 font-medium transition">
+                        <i class="fa-solid fa-graduation-cap w-5"></i><span>Teach AI</span>
                     </button>
                 </div>
-
-                <!-- Memory Status Box -->
                 <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl space-y-2">
                     <div class="flex justify-between text-xs">
                         <span class="text-slate-400">Memory Core</span>
-                        <span id="memoryCount" class="text-cyan-400 font-bold">0 Rules Saved</span>
+                        <span id="memoryCount" class="text-cyan-400 font-bold">0 Rules</span>
                     </div>
-                    <button onclick="exportMemoryJSON()" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition">
-                        <i class="fa-solid fa-download mr-1"></i> Export Backup (.json)
-                    </button>
+                    <button onclick="exportMemoryJSON()" class="w-full py-1.5 bg-slate-800 text-slate-300 text-xs rounded-lg">Export Backup</button>
                 </div>
             </aside>
 
@@ -83,67 +75,72 @@
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-950/60">
                 
                 <!-- TAB 1: QUOTES -->
-                <section id="tabQuotes" class="space-y-6">
+                <section id="tabQuotes" class="space-y-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-100">Market Assets (Crypto & Forex)</h2>
-                        <p class="text-sm text-slate-400">Select any asset to instantly load it into the TradingView Chart section with AI analysis.</p>
+                        <h2 class="text-lg font-bold text-slate-100">Market Assets</h2>
+                        <p class="text-xs text-slate-400">Tap any asset to load it into TradingView Chart.</p>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="assetGrid">
-                        <!-- Populated via app.js -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="assetGrid">
+                        <!-- Populated by JS -->
                     </div>
                 </section>
 
                 <!-- TAB 2: CHARTS -->
-                <section id="tabCharts" class="hidden h-full flex flex-col space-y-4">
+                <section id="tabCharts" class="hidden h-full flex flex-col space-y-3">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h2 class="text-xl font-bold text-slate-100" id="currentChartTitle">BTC/USD - Real-Time Chart</h2>
-                            <p class="text-sm text-slate-400">Advanced TradingView Engine with live indicator data analysis.</p>
+                            <h2 class="text-base font-bold text-slate-100" id="currentChartTitle">BTC/USD Chart</h2>
                         </div>
-                        <div class="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-lg text-xs font-bold" id="aiPredictionBadge">
-                            AI Confidence: Analyzing...
+                        <div class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 rounded-lg text-[10px] font-bold" id="aiPredictionBadge">
+                            Analyzing...
                         </div>
                     </div>
-                    <!-- TradingView Widget Container -->
-                    <div class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden min-h-[500px]" id="tradingview_widget"></div>
+                    <div class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden min-h-[450px]" id="tradingview_widget"></div>
                 </section>
 
                 <!-- TAB 3: AI KNOWLEDGE -->
-                <section id="tabKnowledge" class="hidden space-y-6">
+                <section id="tabKnowledge" class="hidden space-y-4">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-100">AI-Knowledge (Candle Patterns & Strategies)</h2>
-                        <p class="text-sm text-slate-400">Serial-wise core patterns analyzed across multiple timeframes for Sure-Shot execution.</p>
+                        <h2 class="text-lg font-bold text-slate-100">AI-Knowledge Patterns</h2>
+                        <p class="text-xs text-slate-400">Sure-shot timeframe analysis.</p>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="knowledgeGrid">
-                        <!-- Populated via js -->
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="knowledgeGrid"></div>
                 </section>
 
                 <!-- TAB 4: TEACH AI -->
-                <section id="tabTeach" class="hidden space-y-6 max-w-2xl mx-auto">
+                <section id="tabTeach" class="hidden space-y-4 max-w-2xl mx-auto">
                     <div>
-                        <h2 class="text-xl font-bold text-slate-100">Teach AI (Autonomous Memory Feed)</h2>
-                        <p class="text-sm text-slate-400">Type any trading rule, strategy, or concept (e.g., Accumulation, Manipulation, Distribution). The AI will process and permanently lock it into its brain.</p>
+                        <h2 class="text-lg font-bold text-slate-100">Teach AI Core</h2>
+                        <p class="text-xs text-slate-400">Type strategy (e.g. Accumulation, Manipulation).</p>
                     </div>
-                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-2">Teaching Instruction / Concept</label>
-                            <textarea id="teachInput" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 focus:outline-none focus:border-cyan-500 transition text-sm" placeholder="e.g., Learn Accumulation, Manipulation And Distribution (AMD) on 15m timeframe..."></textarea>
-                        </div>
-                        <button onclick="teachAIConcept()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 font-bold rounded-xl text-slate-950 transition shadow-lg shadow-cyan-500/20">
-                            <i class="fa-solid fa-bolt mr-2"></i> Feed to AI Memory Core
-                        </button>
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-3">
+                        <textarea id="teachInput" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 text-xs focus:outline-none focus:border-cyan-500" placeholder="Type rule here..."></textarea>
+                        <button onclick="teachAIConcept()" class="w-full py-2.5 bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs">Feed to AI Memory</button>
                     </div>
-                    <div class="space-y-3">
-                        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Learned Memory Log</h3>
-                        <div id="learnedLogs" class="space-y-2">
-                            <!-- Memory list -->
-                        </div>
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-semibold text-slate-400 uppercase">Learned Memory Log</h3>
+                        <div id="learnedLogs" class="space-y-2"></div>
                     </div>
                 </section>
 
             </main>
         </div>
+
+        <!-- Mobile Bottom Navigation Bar -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur-md flex justify-around p-3 z-50">
+            <button onclick="switchTab('quotes')" id="navQuotesMob" class="flex flex-col items-center text-cyan-400 text-[10px] space-y-1">
+                <i class="fa-solid fa-list-ul text-base"></i><span>Quotes</span>
+            </button>
+            <button onclick="switchTab('charts')" id="navChartsMob" class="flex flex-col items-center text-slate-400 text-[10px] space-y-1">
+                <i class="fa-solid fa-chart-candlestick text-base"></i><span>Chart</span>
+            </button>
+            <button onclick="switchTab('knowledge')" id="navKnowledgeMob" class="flex flex-col items-center text-slate-400 text-[10px] space-y-1">
+                <i class="fa-solid fa-book text-base"></i><span>Knowledge</span>
+            </button>
+            <button onclick="switchTab('teach')" id="navTeachMob" class="flex flex-col items-center text-slate-400 text-[10px] space-y-1">
+                <i class="fa-solid fa-graduation-cap text-base"></i><span>Teach AI</span>
+            </button>
+        </nav>
     </div>
 
     <!-- Scripts -->
