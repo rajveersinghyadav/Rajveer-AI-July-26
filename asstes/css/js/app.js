@@ -4,7 +4,6 @@ function switchTab(tabId) {
     document.getElementById('tabKnowledge').classList.add('hidden');
     document.getElementById('tabTeach').classList.add('hidden');
 
-    // Reset styles for desktop & mobile
     ['Quotes', 'Charts', 'Knowledge', 'Teach'].forEach(name => {
         const deskBtn = document.getElementById(`nav${name}Desk`);
         const mobBtn = document.getElementById(`nav${name}Mob`);
@@ -18,7 +17,6 @@ function switchTab(tabId) {
         }
     });
 
-    // Activate selected tab
     document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.remove('hidden');
     
     const activeDesk = document.getElementById(`nav${tabId.charAt(0).toUpperCase() + tabId.slice(1)}Desk`);
@@ -77,7 +75,8 @@ function renderQuotes() {
 
 function openAssetChart(symbol, name) {
     switchTab('charts');
-    document.getElementById('currentChartTitle').innerText = `${name} (${symbol})`;
+    const titleElem = document.getElementById('currentChartTitle');
+    if (titleElem) titleElem.innerText = `${name} (${symbol})`;
     if (typeof loadTradingViewWidget === 'function') {
         loadTradingViewWidget(symbol);
     }
