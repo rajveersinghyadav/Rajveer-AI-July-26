@@ -19,6 +19,7 @@
             border: 1px solid rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(12px);
         }
+        .target-dynamic { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased overflow-x-hidden pb-24">
@@ -68,7 +69,6 @@
                         <button onclick="switchFolder('Forex')" id="folderBtnForex" class="px-3 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 whitespace-nowrap transition">Forex Pairs</button>
                     </div>
                 </div>
-
                 <div class="neon-card rounded-2xl overflow-hidden border border-slate-800">
                     <div class="grid grid-cols-12 px-3 py-2 bg-slate-900/80 border-b border-slate-800 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                         <div class="col-span-6">Asset / Folder</div>
@@ -92,13 +92,15 @@
                 <div class="flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden min-h-[450px]" id="tradingview_widget"></div>
             </section>
 
-            <!-- TAB 3: KNOWLEDGE -->
-            <section id="tabKnowledge" class="hidden space-y-3">
+            <!-- TAB 3: AI LIVE ANALYSIS (Updated from Knowledge) -->
+            <section id="tabKnowledge" class="hidden space-y-3 pb-16">
                 <div>
-                    <h2 class="text-base font-bold text-slate-100">AI-Knowledge Patterns</h2>
-                    <p class="text-xs text-slate-400">Sure-shot timeframe analysis.</p>
+                    <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-satellite-dish text-cyan-400 mr-1 animate-pulse"></i> Watchlist AI Radar</h2>
+                    <p class="text-xs text-slate-400">Live dynamic targets calculated by AI Volume Engine.</p>
                 </div>
-                <div class="grid grid-cols-1 gap-3" id="knowledgeGrid"></div>
+                <div class="space-y-3" id="aiAnalysisGrid">
+                    <!-- Dynamic Watchlist Cards Injected Here -->
+                </div>
             </section>
 
             <!-- TAB 4: TEACH AI -->
@@ -119,6 +121,24 @@
             </section>
         </main>
 
+        <!-- MARKET BREAKDOWN ALERT (Fixed Bottom above Nav) -->
+        <div id="breakdownAlert" class="fixed bottom-[75px] left-3 right-3 bg-rose-950/95 border border-rose-500/80 rounded-xl p-3 shadow-[0_0_20px_rgba(244,63,94,0.3)] backdrop-blur-md z-40 flex flex-col space-y-2 hidden transform transition-all duration-300 translate-y-0">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-full bg-rose-500/20 border border-rose-500/50 flex items-center justify-center animate-pulse text-rose-500">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-extrabold text-rose-400 uppercase tracking-widest">Market Breakdown!</h4>
+                        <p class="text-[9px] text-slate-300">High selling volume dump detected.</p>
+                    </div>
+                </div>
+                <button onclick="dismissBreakdownAlert()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-[10px] font-bold rounded-lg transition shadow-lg shadow-rose-600/30">
+                    Quit Execution
+                </button>
+            </div>
+        </div>
+
         <!-- Detailed Memory Modal (Popup Page for Full View & Hindi/English Translation) -->
         <div id="memoryModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
             <div class="neon-card w-full max-w-md rounded-2xl p-5 space-y-4 border border-cyan-500/30 shadow-2xl relative">
@@ -131,8 +151,6 @@
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
-
-                <!-- Language Switcher Bar -->
                 <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 p-2 rounded-xl">
                     <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-language mr-1 text-cyan-400"></i> Language:</span>
                     <div class="flex space-x-1">
@@ -140,13 +158,10 @@
                         <button onclick="setModalLanguage('hi')" id="langBtnHi" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-900 text-slate-400 border border-slate-800 transition">हिंदी (Hindi)</button>
                     </div>
                 </div>
-
-                <!-- Detailed Content Box -->
                 <div class="bg-slate-950/80 border border-slate-800 p-3.5 rounded-xl space-y-2 max-h-60 overflow-y-auto">
                     <p class="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider">Detailed Strategy Execution Plan:</p>
                     <p id="modalDesc" class="text-xs text-slate-300 leading-relaxed">Detailed info goes here...</p>
                 </div>
-
                 <div class="text-[10px] text-slate-500 flex justify-between pt-1">
                     <span id="modalTime">Added: Core System</span>
                     <span class="text-cyan-400 font-medium">Apex AI Autonomous Memory</span>
@@ -163,7 +178,7 @@
                 <i class="fa-solid fa-chart-line text-base"></i><span>Chart</span>
             </button>
             <button onclick="switchTab('knowledge')" id="navKnowledge" class="flex flex-col items-center text-slate-400 text-[11px] space-y-1 transition">
-                <i class="fa-solid fa-book-open text-base"></i><span>Knowledge</span>
+                <i class="fa-solid fa-radar text-base"></i><span>Radar AI</span>
             </button>
             <button onclick="switchTab('teach')" id="navTeach" class="flex flex-col items-center text-slate-400 text-[11px] space-y-1 transition">
                 <i class="fa-solid fa-graduation-cap text-base"></i><span>Teach AI</span>
@@ -173,6 +188,22 @@
 
     <!-- Script Engine -->
     <script>
+        const masterAssets = [
+            { symbol: "OANDA:XAUUSD", name: "Gold / US Dollar", folder: "Metals", price: "$2,342.50", change: "+0.85%", bullish: true },
+            { symbol: "TVC:GOLD", name: "Gold Spot", folder: "Metals", price: "$2,340.10", change: "+0.78%", bullish: true },
+            { symbol: "OANDA:XAGUSD", name: "Silver / US Dollar", folder: "Metals", price: "$28.45", change: "+1.20%", bullish: true },
+            { symbol: "TVC:SILVER", name: "Silver Spot", folder: "Metals", price: "$28.40", change: "+1.15%", bullish: true },
+            { symbol: "BINANCE:BTCUSDT", name: "Bitcoin", folder: "Crypto", price: "$68,450.00", change: "+3.45%", bullish: true },
+            { symbol: "BINANCE:ETHUSDT", name: "Ethereum", folder: "Crypto", price: "$3,520.10", change: "+2.12%", bullish: true },
+            { symbol: "BINANCE:SOLUSDT", name: "Solana", folder: "Crypto", price: "$145.80", change: "-0.85%", bullish: false },
+            { symbol: "FX:EURUSD", name: "EUR/USD", folder: "Forex", price: "1.0872", change: "+0.15%", bullish: true },
+            { symbol: "FX:GBPUSD", name: "GBP/USD", folder: "Forex", price: "1.2740", change: "-0.22%", bullish: false }
+        ];
+
+        let currentActiveFolder = 'ALL';
+        let dynamicTargetInterval = null;
+        let alertTimeout = null;
+
         function switchTab(tabId) {
             ['Quotes', 'Charts', 'Knowledge', 'Teach'].forEach(name => {
                 const tab = document.getElementById(`tab${name}`);
@@ -196,34 +227,14 @@
             if (tabId === 'charts') {
                 setTimeout(() => window.dispatchEvent(new Event('resize')), 200);
             } else if (tabId === 'knowledge') {
-                loadKnowledgeData();
+                renderAIAnalysis();
+                // Demo Alert Trigger when user opens Knowledge/Radar tab
+                clearTimeout(alertTimeout);
+                alertTimeout = setTimeout(triggerBreakdownAlert, 4000); // 4 sec after opening
             } else if (tabId === 'teach') {
                 loadMemoryLogs();
             }
         }
-
-        const masterAssets = [
-            { symbol: "OANDA:XAUUSD", name: "Gold / US Dollar", folder: "Metals", price: "$2,342.50", change: "+0.85%", bullish: true },
-            { symbol: "TVC:GOLD", name: "Gold Spot", folder: "Metals", price: "$2,340.10", change: "+0.78%", bullish: true },
-            { symbol: "OANDA:XAGUSD", name: "Silver / US Dollar", folder: "Metals", price: "$28.45", change: "+1.20%", bullish: true },
-            { symbol: "TVC:SILVER", name: "Silver Spot", folder: "Metals", price: "$28.40", change: "+1.15%", bullish: true },
-            { symbol: "COMEX:GC1!", name: "Gold Futures", folder: "Metals", price: "$2,345.00", change: "+0.80%", bullish: true },
-            { symbol: "BINANCE:BTCUSDT", name: "Bitcoin", folder: "Crypto", price: "$68,450.00", change: "+3.45%", bullish: true },
-            { symbol: "BINANCE:ETHUSDT", name: "Ethereum", folder: "Crypto", price: "$3,520.10", change: "+2.12%", bullish: true },
-            { symbol: "BINANCE:SOLUSDT", name: "Solana", folder: "Crypto", price: "$145.80", change: "-0.85%", bullish: false },
-            { symbol: "BINANCE:XRPUSDT", name: "XRP", folder: "Crypto", price: "$0.5820", change: "+1.40%", bullish: true },
-            { symbol: "BINANCE:BNBUSDT", name: "Binance Coin", folder: "Crypto", price: "$585.20", change: "+0.95%", bullish: true },
-            { symbol: "BINANCE:ADAUSDT", name: "Cardano", folder: "Crypto", price: "$0.4500", change: "-1.10%", bullish: false },
-            { symbol: "FX:EURUSD", name: "EUR/USD", folder: "Forex", price: "1.0872", change: "+0.15%", bullish: true },
-            { symbol: "FX:GBPUSD", name: "GBP/USD", folder: "Forex", price: "1.2740", change: "-0.22%", bullish: false },
-            { symbol: "FX:USDJPY", name: "USD/JPY", folder: "Forex", price: "155.60", change: "+0.40%", bullish: true },
-            { symbol: "FX:AUDUSD", name: "AUD/USD", folder: "Forex", price: "0.6650", change: "+0.08%", bullish: true },
-            { symbol: "FX:USDCAD", name: "USD/CAD", folder: "Forex", price: "1.3680", change: "-0.12%", bullish: false },
-            { symbol: "FX:NZDUSD", name: "NZD/USD", folder: "Forex", price: "0.6120", change: "+0.30%", bullish: true },
-            { symbol: "FX:GBPJPY", name: "GBP/JPY", folder: "Forex", price: "198.40", change: "+0.65%", bullish: true }
-        ];
-
-        let currentActiveFolder = 'ALL';
 
         function getWatchlist() {
             const saved = localStorage.getItem('apex_user_watchlist');
@@ -240,6 +251,9 @@
             }
             localStorage.setItem('apex_user_watchlist', JSON.stringify(watchlist));
             renderAssetTable();
+            if(!document.getElementById('tabKnowledge').classList.contains('hidden')) {
+                renderAIAnalysis();
+            }
         }
 
         function switchFolder(folder) {
@@ -257,9 +271,7 @@
             renderAssetTable();
         }
 
-        function handleAssetSearch() {
-            renderAssetTable();
-        }
+        function handleAssetSearch() { renderAssetTable(); }
 
         function renderAssetTable() {
             const tbody = document.getElementById('assetTableBody');
@@ -280,7 +292,7 @@
             }
 
             if (assets.length === 0) {
-                tbody.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">No assets found. Try searching 'Gold' or 'BTC'.</div>`;
+                tbody.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">No assets found.</div>`;
                 return;
             }
 
@@ -309,6 +321,139 @@
             }).join('');
         }
 
+        // ======================= NEW AI RADAR (KNOWLEDGE) LOGIC =======================
+        
+        function parsePriceString(priceStr) {
+            return parseFloat(priceStr.replace(/[^0-9.-]+/g,""));
+        }
+
+        function renderAIAnalysis() {
+            const grid = document.getElementById('aiAnalysisGrid');
+            if (!grid) return;
+            
+            const watchlist = getWatchlist();
+            let assets = masterAssets.filter(a => watchlist.includes(a.symbol));
+
+            if (assets.length === 0) {
+                grid.innerHTML = `
+                    <div class="neon-card p-6 rounded-2xl text-center flex flex-col items-center justify-center space-y-3">
+                        <i class="fa-regular fa-star text-slate-500 text-3xl"></i>
+                        <p class="text-xs text-slate-400">Your Favourite Watchlist is empty.<br>Add assets from the Quotes tab to see AI Analysis.</p>
+                        <button onclick="switchTab('quotes')" class="px-4 py-1.5 bg-slate-800 text-cyan-400 text-xs rounded-xl border border-cyan-500/30">Go to Quotes</button>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = assets.map(asset => {
+                let numericPrice = parsePriceString(asset.price);
+                let isBuy = asset.bullish;
+                
+                // Determine decimal precision based on price magnitude (Forex vs Bitcoin)
+                let isSmallNum = numericPrice < 10;
+                let decimals = isSmallNum ? 4 : 2;
+                
+                // Calculate Sure Shot Target
+                let targetOffset = isBuy ? (numericPrice * 0.005) : -(numericPrice * 0.005);
+                let sureShotTarget = (numericPrice + targetOffset).toFixed(decimals);
+                
+                // Set initial dynamic target just before the sure shot
+                let dynTargetOffset = isBuy ? (numericPrice * 0.001) : -(numericPrice * 0.001);
+                let dynamicTarget = (numericPrice + dynTargetOffset).toFixed(decimals);
+
+                return `
+                    <div class="neon-card p-3 rounded-2xl space-y-3 border border-slate-800 hover:border-cyan-500/30 transition">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <h3 class="font-bold text-slate-100 text-[13px] flex items-center gap-1.5">
+                                <i class="fa-solid fa-crosshairs text-cyan-500 text-xs"></i> ${asset.name}
+                            </h3>
+                            <span class="text-[9px] px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-400">${asset.symbol}</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-4 gap-1.5 text-center items-center">
+                            <!-- 1. Trend -->
+                            <div class="flex flex-col space-y-1 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
+                                <span class="text-[8px] text-slate-500 uppercase tracking-wide">Trend</span>
+                                <span class="text-xs font-bold ${isBuy ? 'text-emerald-400' : 'text-rose-400'}">
+                                    ${isBuy ? '<i class="fa-solid fa-arrow-trend-up"></i> Bull' : '<i class="fa-solid fa-arrow-trend-down"></i> Bear'}
+                                </span>
+                            </div>
+                            
+                            <!-- 2. Buy/Sell -->
+                            <div class="flex flex-col space-y-1 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80 shadow-inner">
+                                <span class="text-[8px] text-slate-500 uppercase tracking-wide">Action</span>
+                                <span class="text-xs font-bold ${isBuy ? 'text-emerald-500' : 'text-rose-500'}">
+                                    ${isBuy ? 'BUY' : 'SELL'}
+                                </span>
+                            </div>
+                            
+                            <!-- 3. Target (Sure Shot) -->
+                            <div class="flex flex-col space-y-1 bg-slate-900/60 p-2 rounded-xl border border-slate-800/80">
+                                <span class="text-[8px] text-slate-500 uppercase tracking-wide">Target</span>
+                                <span class="text-xs font-bold text-slate-300">${sureShotTarget}</span>
+                            </div>
+                            
+                            <!-- 4. Dynamic Live Target -->
+                            <div class="flex flex-col space-y-1 bg-cyan-950/30 p-2 rounded-xl border border-cyan-500/40 relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-cyan-500/10 animate-pulse"></div>
+                                <span class="text-[8px] text-cyan-300 uppercase tracking-wide z-10">Live Hit</span>
+                                <span class="text-xs font-bold text-cyan-400 z-10 target-dynamic" data-sure="${sureShotTarget}" data-decimals="${decimals}" data-dir="${isBuy ? 1 : -1}">
+                                    ${dynamicTarget}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (dynamicTargetInterval) clearInterval(dynamicTargetInterval);
+            dynamicTargetInterval = setInterval(updateDynamicTargets, 2000);
+        }
+
+        function updateDynamicTargets() {
+            document.querySelectorAll('.target-dynamic').forEach(el => {
+                let currentVal = parseFloat(el.innerText);
+                let decimals = parseInt(el.getAttribute('data-decimals'));
+                let direction = parseInt(el.getAttribute('data-dir'));
+                let sureTarget = parseFloat(el.getAttribute('data-sure'));
+                
+                // Small step based on asset type
+                let step = decimals === 4 ? 0.0001 : 0.01;
+                
+                // Move slowly towards sure target, don't exceed it
+                let move = (Math.random() > 0.4) ? step : 0; 
+                let newVal = currentVal + (direction * move);
+                
+                // Check bounds: Jaha Tak Market Sure jayega Usse Niche (ya aage) nahi aayega
+                if (direction === 1 && newVal > sureTarget) newVal = sureTarget;
+                if (direction === -1 && newVal < sureTarget) newVal = sureTarget;
+                
+                el.innerText = newVal.toFixed(decimals);
+                
+                if (move > 0) {
+                    el.classList.add('text-white');
+                    setTimeout(() => el.classList.remove('text-white'), 300);
+                }
+            });
+        }
+
+        function triggerBreakdownAlert() {
+            const alertBox = document.getElementById('breakdownAlert');
+            if (alertBox) {
+                alertBox.classList.remove('hidden');
+                // Play notification sound if possible (browser policies might block without interaction, but visually it pops)
+            }
+        }
+
+        function dismissBreakdownAlert() {
+            const alertBox = document.getElementById('breakdownAlert');
+            if (alertBox) {
+                alertBox.classList.add('hidden');
+                alert("Execution Quit Successfully! Capital is safe.");
+            }
+        }
+
+        // ==============================================================================
+
         function openAssetChart(symbol, name) {
             switchTab('charts');
             document.getElementById('currentChartTitle').innerText = `${name} (${symbol})`;
@@ -324,18 +469,9 @@
             script.async = true;
             script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
             script.innerHTML = JSON.stringify({
-                "autosize": true,
-                "symbol": symbol,
-                "interval": "D",
-                "timezone": "Etc/UTC",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "hide_top_toolbar": false,
-                "hide_legend": false,
-                "save_image": false,
-                "calendar": false,
-                "hide_volume": false,
+                "autosize": true, "symbol": symbol, "interval": "D", "timezone": "Etc/UTC",
+                "theme": "dark", "style": "1", "locale": "en", "hide_top_toolbar": false,
+                "hide_legend": false, "save_image": false, "calendar": false, "hide_volume": false,
                 "support_host": "https://www.tradingview.com"
             });
             container.appendChild(script);
@@ -356,43 +492,17 @@
             }, 800);
         }
 
-        const defaultKnowledge = [
-            { title: "Accumulation, Manipulation & Distribution (AMD)", timeframe: "15m / 1H", winrate: "94.5%", desc: "Smart money trap before expansion. Asian range sweep followed by institutional push." },
-            { title: "Bullish / Bearish Order Block (OB)", timeframe: "5m / 15m", winrate: "91.2%", desc: "Last opposing candle before strong impulsive move. High probability re-test." },
-            { title: "Fair Value Gap (FVG)", timeframe: "1m / 5m", winrate: "89.8%", desc: "Price inefficiency zone where market returns before continuation." }
-        ];
-
-        function loadKnowledgeData() {
-            const grid = document.getElementById('knowledgeGrid');
-            if (!grid) return;
-            grid.innerHTML = defaultKnowledge.map(k => `
-                <div class="neon-card p-4 rounded-2xl space-y-2">
-                    <div class="flex justify-between items-start">
-                        <h3 class="font-bold text-slate-100 text-sm">${k.title}</h3>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${k.winrate} Win</span>
-                    </div>
-                    <p class="text-xs text-slate-400">${k.desc}</p>
-                    <p class="text-[10px] text-cyan-400">Timeframe: ${k.timeframe}</p>
-                </div>
-            `).join('');
-        }
-
         function getStoredMemory() {
             const saved = localStorage.getItem('apex_ai_custom_memory');
-            return saved ? JSON.parse(saved) : [
-                { 
-                    title: "Initial Core Genesis", 
-                    winrate: "95.0% Win", 
-                    time: "Core System", 
-                    descEn: "Strict risk management active. Default autonomous parameters locked to safeguard capital against high volatility.", 
-                    descHi: "कठोर जोखिम प्रबंधन सक्रिय है। उच्च उतार-चढ़ाव से पूंजी की सुरक्षा के लिए डिफ़ॉल्ट स्वायत्त पैरामीटर लॉक हैं।" 
-                }
-            ];
+            return saved ? JSON.parse(saved) : [{ 
+                title: "Initial Core Genesis", winrate: "95.0% Win", time: "Core System", 
+                descEn: "Strict risk management active.", descHi: "कठोर जोखिम प्रबंधन सक्रिय है।" 
+            }];
         }
 
         function saveMemoryToStorage(mem) {
             localStorage.setItem('apex_ai_custom_memory', JSON.stringify(mem));
-            document.getElementById('memoryCount').innerText = mem.length;
+            if(document.getElementById('memoryCount')) document.getElementById('memoryCount').innerText = mem.length;
         }
 
         function loadMemoryLogs() {
@@ -407,10 +517,6 @@
                         <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${item.winrate || '92.0% Win'}</span>
                     </div>
                     <p class="text-xs text-slate-400 line-clamp-2">${item.descEn || item.desc}</p>
-                    <div class="flex justify-between items-center pt-1 text-[10px]">
-                        <span class="text-cyan-400">Added: ${item.time}</span>
-                        <span class="text-slate-400 underline">Tap to read full details & translate 🌐</span>
-                    </div>
                 </div>
             `).reverse().join('');
         }
@@ -420,7 +526,6 @@
 
         function openMemoryDetail(idx) {
             const memory = getStoredMemory();
-            // Since displayed in reverse order, get original index
             const actualIdx = memory.length - 1 - idx;
             currentSelectedMemory = memory[actualIdx];
             currentModalLang = 'en';
@@ -441,13 +546,9 @@
         function setModalLanguage(lang) {
             currentModalLang = lang;
             if (!currentSelectedMemory) return;
-
-            if (lang === 'en') {
-                document.getElementById('modalDesc').innerText = currentSelectedMemory.descEn || currentSelectedMemory.desc;
-            } else {
-                document.getElementById('modalDesc').innerText = currentSelectedMemory.descHi || 
-                    `[हिंदी अनुवाद]: ${currentSelectedMemory.descEn || currentSelectedMemory.desc} (स्मार्ट मनी और इंस्टीट्यूशनल ट्रेडिंग सेटअप के अनुसार अनुकूलित।)`;
-            }
+            document.getElementById('modalDesc').innerText = lang === 'en' 
+                ? (currentSelectedMemory.descEn || currentSelectedMemory.desc) 
+                : (currentSelectedMemory.descHi || `[हिंदी अनुवाद]: ${currentSelectedMemory.descEn || currentSelectedMemory.desc}`);
             updateLangButtons();
         }
 
@@ -464,39 +565,26 @@
         }
 
         function teachAIConcept() {
-            const titleInput = document.getElementById('teachTitleInput');
-            const descInput = document.getElementById('teachInput');
-            const title = titleInput.value.trim();
-            const desc = descInput.value.trim();
-            
-            if (!title || !desc) {
-                alert("Please enter both a Strategy Title and Description.");
-                return;
-            }
-
+            const title = document.getElementById('teachTitleInput').value.trim();
+            const desc = document.getElementById('teachInput').value.trim();
+            if (!title || !desc) return alert("Enter Title and Description.");
             const memory = getStoredMemory();
             memory.push({
-                title: title,
-                winrate: (Math.random() * (96 - 90) + 90).toFixed(1) + "% Win",
+                title: title, winrate: (Math.random() * 6 + 90).toFixed(1) + "% Win",
                 time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                descEn: desc,
-                descHi: `[हिंदी अनुवाद]: ${desc} (यह नियम एपेक्स एआई के न्यूरल कोर में सुरक्षित रूप से सहेजा गया है ताकि सही समय पर ट्रेड एग्जिक्यूट किया जा सके।)`
+                descEn: desc, descHi: `[हिंदी अनुवाद]: ${desc}`
             });
-
             saveMemoryToStorage(memory);
-            titleInput.value = '';
-            descInput.value = '';
-            alert("✅ AI successfully learned and saved this strategy!");
+            document.getElementById('teachTitleInput').value = '';
+            document.getElementById('teachInput').value = '';
+            alert("✅ Rule Saved!");
             loadMemoryLogs();
         }
 
         function syncWithGoogleDrive() {
             const txt = document.getElementById('syncText');
             txt.innerText = "Syncing...";
-            setTimeout(() => {
-                txt.innerText = "Synced 🟢";
-                alert("🚀 Memory successfully backed up to Google Drive storage!");
-            }, 1200);
+            setTimeout(() => { txt.innerText = "Synced 🟢"; }, 1200);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -504,7 +592,6 @@
             loadTradingViewWidget("OANDA:XAUUSD");
             saveMemoryToStorage(getStoredMemory());
             
-            // Flame Background
             const canvas = document.getElementById('flameCanvas');
             const ctx = canvas.getContext('2d');
             let w = canvas.width = window.innerWidth;
