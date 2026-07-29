@@ -34,6 +34,14 @@
             overflow: hidden;
             background-color: #020617;
         }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            animation: marquee 18s linear infinite;
+        }
     </style>
 </head>
 <body class="flex flex-col h-[100dvh] w-screen overflow-hidden antialiased">
@@ -44,6 +52,18 @@
     <!-- MAIN APP WRAPPER -->
     <div class="relative z-10 flex flex-col h-full w-full overflow-hidden pb-16">
         
+        <!-- Top Ticker / Custom Name Banner (Rajveer) -->
+        <div class="bg-gradient-to-r from-cyan-950 via-slate-900 to-cyan-950 border-b border-cyan-500/30 py-1 px-3 overflow-hidden whitespace-nowrap shrink-0 flex items-center">
+            <div class="text-[10px] text-cyan-300 font-bold uppercase tracking-wider flex items-center space-x-2 w-full overflow-hidden">
+                <span class="text-emerald-400 shrink-0"><i class="fa-solid fa-radar mr-1 animate-pulse"></i>Scanner Active:</span>
+                <div class="overflow-hidden whitespace-nowrap w-full">
+                    <span class="animate-marquee inline-block font-mono text-cyan-200">
+                        I Am Finding Your Gift Rajveer &nbsp;&bull;&nbsp; Jab tak aisi koi candle market mein nahi milti jo aapki knowledge ke according ho, tab tak wait karein &nbsp;&bull;&nbsp; Patience is the ultimate edge, Rajveer!
+                    </span>
+                </div>
+            </div>
+        </div>
+
         <!-- Top Header -->
         <header class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0">
             <div class="flex items-center space-x-2">
@@ -111,7 +131,7 @@
                     </div>
                     <div class="overflow-hidden whitespace-nowrap">
                         <p id="liveAiCommentary" class="text-[11px] text-cyan-300 font-medium animate-pulse">
-                            [Universal AI Brain]: Ready to answer any query with precise expert analysis...
+                            [Rajveer's Universal AI Brain]: Searching for your high-probability setup...
                         </p>
                     </div>
                 </div>
@@ -148,7 +168,7 @@
                         <div class="flex items-start space-x-2">
                             <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
                             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl rounded-tl-none space-y-1.5 text-slate-200 leading-relaxed">
-                                <p>Namaste! Main aapka Universal Expert AI Assistant hoon. Aap mujhse kisi bhi cheez ke baare mein pooch sakte hain—chahe woh Coding ho, Science ho, Trading ho, General Knowledge ho, ya koi bhi sawal ho. Main aapko ekdum sahi aur detail mein jawab dunga!</p>
+                                <p>Namaste Rajveer! Main aapka Universal Expert AI Assistant hoon. I Am Finding Your Gift Rajveer—jab tak aisi koi candle market mein nahi milti jo aapki strict knowledge ke according ho, tab tak hum wait karenge. Aap mujhse kisi bhi cheez ke baare mein pooch sakte hain!</p>
                             </div>
                         </div>
                     </div>
@@ -169,7 +189,7 @@
                             <i class="fa-solid fa-camera text-xs"></i>
                             <input type="file" id="mediaUploadInput" accept="image/*" onchange="handleMediaSelected(event)" class="hidden">
                         </label>
-                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Kuchh bhi poochhein (e.g., Python code, Science, Trading)..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Kuchh bhi poochhein Rajveer..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                         <button onclick="sendChatMessage()" class="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center shrink-0 shadow-lg">
                             <i class="fa-solid fa-paper-plane text-[10px]"></i>
                         </button>
@@ -186,7 +206,7 @@
                 <div class="flex items-center justify-between p-3 border-b border-slate-800 bg-slate-950/50 shrink-0">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid fa-shield-halved text-cyan-400"></i>
-                        <h3 class="text-sm font-bold text-slate-100">100% Sure-Shot Vault (001 - 100M)</h3>
+                        <h3 class="text-sm font-bold text-slate-100">Rajveer's Sure-Shot Vault</h3>
                     </div>
                     <button onclick="toggleKnowledgeDrawer()" class="w-7 h-7 bg-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-white">
                         <i class="fa-solid fa-xmark text-xs"></i>
@@ -286,7 +306,7 @@
                 signal: "Sure-shot - BUY",
                 targetText: "Target Confirmed: Up to Daily Order Block @ $2,385.50",
                 img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=500&auto=format&fit=crop&q=60",
-                desc: "Autonomous AI deep-scan across 100M historical candles detected an Asian Session High Liquidity Sweep followed by displacement expansion. Buyer/Seller Volume Delta computed: +48,200 net institutional buy orders vs -14,100 retail sell stops absorbed. Fair Value Gap (FVG) calculated at 1.0870 - 1.0895 range (25 Pips imbalance). Target derived by projecting previous structural Order Block mitigation, yielding a high-probability bullish expansion target up to Daily Resistance @ $2,385.50."
+                desc: "Rajveer's custom filter active: Autonomous AI deep-scan detected an Asian Session High Liquidity Sweep followed by displacement expansion. Buyer/Seller Volume Delta computed: +48,200 net institutional buy orders vs -14,100 retail sell stops absorbed. Fair Value Gap (FVG) calculated at 1.0870 - 1.0895 range. Target derived by projecting previous structural Order Block mitigation, yielding a high-probability bullish expansion target up to Daily Resistance @ $2,385.50."
             },
             {
                 id: 2,
@@ -324,7 +344,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(aiMasterTopics, null, 2));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "ApexAI_Universal_Backup.json");
+            dlAnchor.setAttribute("download", "Rajveer_ApexAI_Backup.json");
             document.body.appendChild(dlAnchor);
             dlAnchor.click();
             dlAnchor.remove();
@@ -567,7 +587,7 @@
             const q = query.toLowerCase().trim();
 
             if (q.includes('seekha') || q.includes('kya seekha') || q.includes('vault') || q.includes('patterns') || q.includes('kya-kya') || q.includes('memory')) {
-                let responseHtml = `🧠 <b>Apex AI Memory Bank (100M Sure-Shot Vault):</b><br>Continuous historical & live candle scan verified these patterns:<br><ul class="list-disc pl-4 mt-1.5 space-y-1.5">`;
+                let responseHtml = `🧠 <b>Rajveer's AI Memory Bank (100M Sure-Shot Vault):</b><br>Continuous historical candle scan verified these patterns according to your strict knowledge:<br><ul class="list-disc pl-4 mt-1.5 space-y-1.5">`;
                 aiMasterTopics.forEach((t, i) => {
                     responseHtml += `<li><b>Pattern #${String(i+1).padStart(3,'0')} - ${t.title}</b> (${t.signal || 'Sure-shot'})<br><span class="text-[10px] text-cyan-300 font-mono">${t.targetText}</span></li>`;
                 });
@@ -576,33 +596,33 @@
             }
 
             if (q.includes('hello') || q.includes('hi') || q.includes('namaste') || q.includes('hey')) {
-                return `Namaste! Main aapka Universal Expert AI hoon. Aap mujhse science, coding, trading, math, history ya kisi bhi topic par sawal pooch sakte hain. Main aapko ekdum precise aur structured jawab dunga!`;
+                return `Namaste Rajveer! Main aapka Universal Expert AI hoon. I Am Finding Your Gift Rajveer—jab tak aisi koi candle market mein nahi milti jo aapki knowledge ke according ho, tab tak wait karna hi sabse bada discipline hai!`;
             }
 
             if (q.includes('python') || q.includes('code') || q.includes('html') || q.includes('javascript') || q.includes('function')) {
-                return `💻 <b>Expert Coding Assistant:</b><br>Aapne programming ya code se related query puchi hai. Yeh raha uska professional solution:<br><pre class="bg-slate-950 p-2 rounded text-[10px] text-cyan-300 font-mono mt-1 overflow-x-auto"># Apex AI Python / Code Structure
+                return `💻 <b>Expert Coding Assistant for Rajveer:</b><br>Aapne programming query puchi hai. Yeh raha uska professional solution:<br><pre class="bg-slate-950 p-2 rounded text-[10px] text-cyan-300 font-mono mt-1 overflow-x-auto"># Rajveer's Custom Python Logic
 def apex_solve_problem(data):
     result = [x * 2 for x in data if x > 0]
     return {"status": "success", "output": result}
 
-print(apex_solve_problem([1, -2, 3, 4]))</pre><br>Is code mein list comprehension ke zariye negative numbers ko filter karke positive values ko double kiya gaya hai.`;
+print(apex_solve_problem([1, -2, 3, 4]))</pre><br>Is code mein list comprehension ke zariye negative numbers ko filter kiya gaya hai.`;
             }
 
             if (q.includes('trading') || q.includes('gold') || q.includes('xauusd') || q.includes('bitcoin') || q.includes('market') || q.includes('buy') || q.includes('sell')) {
                 let randomCount = Math.floor(Math.random() * 25000000) + 40000000;
-                return `📈 <b>Market & Trading Autonomous Analysis:</b><br>
+                return `📈 <b>Market Autonomous Analysis for Rajveer:</b><br>
                 Multi-timeframe candle scan & volume delta computed successfully.<br>
+                ⚠️ <i>Rule Reminder:</i> I Am Finding Your Gift Rajveer. Jab tak proper candle match na ho, entry avoid karein!<br>
                 📊 <b>Total Detections:</b> ${randomCount.toLocaleString()} / 100M Candles<br>
-                🎯 <b>Sure Target Calculated:</b> Up to Order Block @ $2,392.40 (Liquidity Sweep Safe).<br>
-                <i>Reasoning:</i> FVG imbalance cleared, institutional buy volume active.`;
+                🎯 <b>Sure Target:</b> Up to Order Block @ $2,392.40.`;
             }
 
-            return `💡 <b>Expert Universal Response:</b><br>
-            Aapne jo query puchi hai uske anusar, yeh ek deep-level technical aur analytical topic hai. Apex AI engine ke anusaar iska core concept yeh hai ki har complex system ko step-by-step logic aur structured data ke sath solve kiya jata hai.<br><br>
+            return `💡 <b>Expert Universal Response for Rajveer:</b><br>
+            Aapne jo query puchi hai uske anusar, yeh ek deep-level technical topic hai. Rajveer, jaisa ki aapka rule hai—jab tak aisi koi candle market mein nahi milti jo aapki knowledge ke according ho, tab tak patience rakhna sabse best hai.<br><br>
             📌 <b>Key Highlights:</b><br>
-            - <b>Accuracy:</b> 100% Verified Logic Architecture.<br>
-            - <b>Execution:</b> Fast, real-time response generation.<br><br>
-            Agar aap is topic ke kisi specific aspect ke baare mein aur detail chahte hain, toh turant poochhein!`;
+            - <b>Custom Edge:</b> 100% Verified Logic Architecture.<br>
+            - <b>Discipline:</b> No forced trades.<br><br>
+            Agar aap is topic ke kisi specific aspect par aur detail chahte hain, toh turant poochhein!`;
         }
 
         function sendChatMessage() {
@@ -617,7 +637,7 @@ print(apex_solve_problem([1, -2, 3, 4]))</pre><br>Is code mein list comprehensio
                 userHtml += `<p class="text-[10px] italic text-cyan-400">[Image Attached]</p>`;
             }
             userHtml += `<p>${text || "Analyze this."}</p></div>
-                <div class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center shrink-0 text-[10px] font-bold">You</div>
+                <div class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center shrink-0 text-[10px] font-bold">R</div>
             </div>`;
             chatMessages.insertAdjacentHTML('beforeend', userHtml);
             
@@ -641,8 +661,8 @@ print(apex_solve_problem([1, -2, 3, 4]))</pre><br>Is code mein list comprehensio
 
         function startLiveCommentaryStream() {
             const commentaries = [
-                "[Universal AI Brain]: Continuous 100M candle scan & volume delta calculation active.",
-                "[Universal AI Brain]: Expert reasoning modules active. Ask anything in chat."
+                "[Rajveer's AI Brain]: I Am Finding Your Gift Rajveer... Scanning 100M historical candles.",
+                "[Rajveer's AI Brain]: Jab tak aisi koi candle nahi milti jo aapki knowledge ke according ho, hum wait kar rahe hain."
             ];
             let idx = 0;
             if (commentaryInterval) clearInterval(commentaryInterval);
