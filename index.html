@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ApexAI Trader - Professional AI Brain</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,25 +26,23 @@
         .slide-drawer.open {
             transform: translateX(0);
         }
-        /* Perfect Mobile Dynamic Viewport Fix */
+        /* Mobile Viewport Fix with Safe Area */
         html, body {
-            height: 100vh;
-            height: 100dvh;
+            height: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
-            position: fixed;
-            width: 100%;
+            background-color: #020617;
         }
     </style>
 </head>
-<body class="flex flex-col h-full w-full overflow-hidden antialiased">
+<body class="flex flex-col h-screen w-screen overflow-hidden antialiased">
 
     <!-- Background Flame Canvas -->
     <canvas id="flameCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-20"></canvas>
 
     <!-- MAIN APP WRAPPER -->
-    <div class="relative z-10 flex flex-col h-full w-full overflow-hidden">
+    <div class="relative z-10 flex flex-col h-full w-full overflow-hidden pb-16">
         
         <!-- Top Header -->
         <header class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0">
@@ -67,7 +65,7 @@
         </header>
 
         <!-- DYNAMIC CONTENT TABS CONTAINER -->
-        <main class="flex-1 overflow-hidden relative flex flex-col pb-14">
+        <main class="flex-1 overflow-hidden relative flex flex-col">
             
             <!-- TAB 1: QUOTES & ASSETS -->
             <section id="tabQuotes" class="absolute inset-0 flex flex-col p-3 space-y-3 overflow-y-auto">
@@ -90,7 +88,7 @@
                         <div class="col-span-3 text-right">Price</div>
                         <div class="col-span-3 text-right">Action</div>
                     </div>
-                    <div id="assetTableBody" class="divide-y divide-slate-800/50 overflow-y-auto flex-1 pb-16"></div>
+                    <div id="assetTableBody" class="divide-y divide-slate-800/50 overflow-y-auto flex-1 pb-6"></div>
                 </div>
             </section>
 
@@ -118,32 +116,32 @@
                     </div>
                 </div>
 
-                <div class="relative flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden mb-12">
+                <div class="relative flex-1 w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden mb-2">
                     <div id="tradingview_widget" class="absolute inset-0 w-full h-full"></div>
                     <canvas id="aiChartOverlayCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-20"></canvas>
                 </div>
             </section>
 
             <!-- TAB 3: RADAR TARGETS -->
-            <section id="tabKnowledge" class="absolute inset-0 hidden flex flex-col p-3 space-y-3 overflow-y-auto pb-16">
+            <section id="tabKnowledge" class="absolute inset-0 hidden flex flex-col p-3 space-y-3 overflow-y-auto pb-6">
                 <div class="shrink-0">
                     <h2 class="text-base font-bold text-slate-100"><i class="fa-solid fa-satellite-dish text-cyan-400 mr-1 animate-pulse"></i> Autonomous Radar & Targets</h2>
                     <p class="text-xs text-slate-400">Calculated precise targets up to structural order blocks.</p>
                 </div>
-                <div class="space-y-3 pb-12" id="aiAnalysisGrid"></div>
+                <div class="space-y-3 pb-6" id="aiAnalysisGrid"></div>
             </section>
 
-            <!-- TAB 4: ADVANCED EXPERT AI CHAT (FIXED LAYOUT & INPUT) -->
+            <!-- TAB 4: ADVANCED EXPERT AI CHAT (100% FIXED VISIBILITY) -->
             <section id="tabTeach" class="absolute inset-0 hidden flex flex-col p-2 space-y-1 overflow-hidden">
-                <div class="flex items-center justify-between shrink-0 px-1">
+                <div class="flex items-center justify-between shrink-0 px-1 py-1">
                     <div>
                         <h2 class="text-xs font-bold text-slate-100">Expert AI Reasoning Brain</h2>
                     </div>
                     <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">Active</span>
                 </div>
 
-                <!-- Chat Box Container -->
-                <div class="neon-card rounded-2xl p-2.5 flex-1 flex flex-col border border-slate-800 overflow-hidden relative">
+                <!-- Chat Box Container with Safe Bottom Spacing -->
+                <div class="neon-card rounded-2xl p-2.5 flex-1 flex flex-col border border-slate-800 overflow-hidden relative mb-1">
                     
                     <!-- Scrollable Messages Area -->
                     <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs mb-2">
@@ -165,7 +163,7 @@
                         <button onclick="clearMediaUpload()" class="text-slate-400 hover:text-rose-400 text-xs px-2"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
-                    <!-- Input Bar Properly Docked -->
+                    <!-- Input Bar Properly Docked Above Bottom Nav -->
                     <div class="pt-2 border-t border-slate-800/80 flex items-center space-x-1.5 shrink-0 bg-slate-950/40">
                         <label class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-800 cursor-pointer transition shrink-0">
                             <i class="fa-solid fa-camera text-xs"></i>
@@ -248,7 +246,7 @@
         </div>
 
         <!-- FIXED MOBILE BOTTOM NAVIGATION BAR -->
-        <nav class="absolute bottom-0 left-0 right-0 bg-slate-900/98 border-t border-slate-800 backdrop-blur-md flex justify-around p-2 z-40 shrink-0">
+        <nav class="absolute bottom-0 left-0 right-0 h-14 bg-slate-900/98 border-t border-slate-800 backdrop-blur-md flex justify-around items-center px-2 z-40 shrink-0">
             <button onclick="switchTab('quotes')" id="navQuotes" class="flex flex-col items-center text-cyan-400 text-[10px] space-y-0.5 transition">
                 <i class="fa-solid fa-list text-xs"></i><span>Quotes</span>
             </button>
@@ -518,7 +516,7 @@
                 return `Aapne abhi tak mujhe apna naam nahi bataya hai! Aapka naam kya hai? Main ise yaad rakhunga.`;
             }
             if (q.includes('hello') || q.includes('hi') || q.includes('namaste')) {
-                return `Namaste! Mera expert reasoning brain active hai. Aap mujhse koi bhi trading sawal pooch sakte hain ya apna naam bata sakte hain.`;
+                return `Namaste! Mera expert reasoning brain active hai. Aap mujhse koi bhi sawal pooch sakte hain ya apna naam bata sakte hain.`;
             }
 
             let randomCount = Math.floor(Math.random() * 25000000) + 40000000;
