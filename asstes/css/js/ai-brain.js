@@ -1,6 +1,5 @@
 // --- AI AUTONOMOUS BRAIN & MEMORY CORE ---
 
-// Default Knowledge Base (Candle Patterns & Strategies)
 const defaultKnowledge = [
     { title: "Accumulation, Manipulation & Distribution (AMD)", timeframe: "15m / 1H", winrate: "94.5%", desc: "Identifies smart money trap before expansion. Look for Asian range sweep followed by true institutional push." },
     { title: "Bullish / Bearish Order Block (OB)", timeframe: "5m / 15m / 1H", winrate: "91.2%", desc: "Last opposing candle before a strong impulsive move. High probability re-test zone." },
@@ -27,7 +26,25 @@ function loadKnowledgeData() {
     `).join('');
 }
 
-// --- TEACH AI & MEMORY MANAGEMENT ---
+// --- GEMINI SERVER-CONNECTED CHAT & BRAIN ---
+async function sendChatMessageToGemini(userMessage) {
+    try {
+        const response = await fetch('/api/trading-brain', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userMessage })
+        });
+        const data = await response.json();
+        if (data.success) {
+            return data.reply;
+        } else {
+            return "Error from Brain Server: " + data.error;
+        }
+    } catch (err) {
+        return "Network Error: Unable to connect to iPhone Server.";
+    }
+}
+
 function getStoredMemory() {
     const saved = localStorage.getItem('apex_ai_custom_memory');
     return saved ? JSON.parse(saved) : [
@@ -64,33 +81,6 @@ function loadMemoryLogs() {
     `).reverse().join('');
 }
 
-function teachAIConcept() {
-    const input = document.getElementById('teachInput');
-    const conceptText = input.value.trim();
-
-    if (!conceptText) {
-        alert("Please enter a concept or rule for the AI to learn.");
-        return;
-    }
-
-    // Simulate Autonomous Analysis & Integration
-    const memory = getStoredMemory();
-    const newEntry = {
-        topic: conceptText.length > 35 ? conceptText.substring(0, 35) + '...' : conceptText,
-        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        content: `Analyzed live TradingView structure & web indicators. Permanently integrated rule: "${conceptText}" into profit-maximization core.`
-    };
-
-    memory.push(newEntry);
-    saveMemoryToStorage(memory);
-    input.value = '';
-
-    // Success Alert / UI feedback
-    alert(`✅ Success: AI has deeply analyzed "${newEntry.topic}" and permanently locked it into its Brain Memory Core!`);
-    loadMemoryLogs();
-}
-
-// --- BACKUP & GOOGLE DRIVE SIMULATION ---
 function exportMemoryJSON() {
     const memory = getStoredMemory();
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(memory, null, 2));
@@ -102,17 +92,6 @@ function exportMemoryJSON() {
     downloadAnchor.remove();
 }
 
-function syncWithGoogleDrive() {
-    const syncText = document.getElementById('syncText');
-    syncText.innerText = "Connecting Drive...";
-    
-    setTimeout(() => {
-        syncText.innerText = "Drive Synced 🟢";
-        alert("🚀 Cloud Memory Connected! Your AI memory is now synchronized with Google Drive file storage backup.");
-    }, 1500);
-}
-
-// Initialize memory count on load
 window.addEventListener('DOMContentLoaded', () => {
     updateMemoryCounter();
 });
