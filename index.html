@@ -26,12 +26,15 @@
         .slide-drawer.open {
             transform: translateX(0);
         }
-        /* Mobile Fixed Viewport Fix */
+        /* Perfect Mobile Dynamic Viewport Fix for Keyboard Overlap */
         html, body {
-            height: 100%;
+            height: 100vh;
+            height: 100dvh;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
         }
     </style>
 </head>
@@ -44,7 +47,7 @@
     <div class="relative z-10 flex flex-col h-full w-full overflow-hidden">
         
         <!-- Top Header -->
-        <header class="flex items-center justify-between px-4 py-2.5 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0">
+        <header class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0">
             <div class="flex items-center space-x-2">
                 <button onclick="toggleKnowledgeDrawer()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 flex items-center space-x-1.5 text-cyan-400 hover:bg-slate-700 transition">
                     <i class="fa-solid fa-brain text-xs"></i>
@@ -64,7 +67,7 @@
         </header>
 
         <!-- DYNAMIC CONTENT TABS CONTAINER -->
-        <main class="flex-1 overflow-hidden relative flex flex-col">
+        <main class="flex-1 overflow-hidden relative flex flex-col pb-14">
             
             <!-- TAB 1: QUOTES & ASSETS -->
             <section id="tabQuotes" class="absolute inset-0 flex flex-col p-3 space-y-3 overflow-y-auto">
@@ -131,47 +134,46 @@
             </section>
 
             <!-- TAB 4: ADVANCED EXPERT AI CHAT (FIXED KEYBOARD LAYOUT) -->
-            <section id="tabTeach" class="absolute inset-0 hidden flex flex-col p-3 space-y-2 overflow-hidden">
-                <div class="flex items-center justify-between shrink-0">
+            <section id="tabTeach" class="absolute inset-0 hidden flex flex-col p-2 space-y-1 overflow-hidden">
+                <div class="flex items-center justify-between shrink-0 px-1">
                     <div>
-                        <h2 class="text-sm font-bold text-slate-100">Expert AI Reasoning Brain</h2>
-                        <p class="text-[11px] text-slate-400">Ask any question. Answers with step-by-step logic.</p>
+                        <h2 class="text-xs font-bold text-slate-100">Expert AI Reasoning Brain</h2>
                     </div>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">Active</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">Active</span>
                 </div>
 
                 <!-- Chat Box Container - Fully Fixed & Scrollable Messages -->
-                <div class="neon-card rounded-2xl p-3 flex-1 flex flex-col justify-between border border-slate-800 overflow-hidden">
+                <div class="neon-card rounded-2xl p-2.5 flex-1 flex flex-col justify-between border border-slate-800 overflow-hidden">
                     
                     <!-- Scrollable Messages Area -->
-                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs">
+                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
                         <div class="flex items-start space-x-2">
-                            <div class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-xs font-bold">AI</div>
-                            <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl rounded-tl-none space-y-2 text-slate-200">
-                                <p>Namaste! Mera expert reasoning brain fully activate ho chuka hai. Aap mujhse koi bhi sawal pooch sakte hain. Main aapko exact calculations aur professional points mein samjhaunga!</p>
+                            <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
+                            <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl rounded-tl-none space-y-1.5 text-slate-200">
+                                <p>Namaste! Mera expert reasoning brain fully activate ho chuka hai. Aap mujhse koi bhi sawal pooch sakte hain.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Upload Preview Area -->
-                    <div id="mediaPreviewContainer" class="hidden items-center space-x-2 p-2 bg-slate-900/90 border border-slate-800 rounded-xl my-1 shrink-0">
-                        <div id="mediaThumbnail" class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-cyan-400 overflow-hidden"></div>
+                    <div id="mediaPreviewContainer" class="hidden items-center space-x-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-xl my-1 shrink-0">
+                        <div id="mediaThumbnail" class="w-7 h-7 rounded bg-slate-800 flex items-center justify-center text-cyan-400 overflow-hidden"></div>
                         <div class="flex-1 overflow-hidden">
-                            <p id="mediaFileName" class="text-[11px] font-semibold text-slate-200 truncate">chart.png</p>
-                            <span class="text-[9px] text-emerald-400">Ready for Analysis</span>
+                            <p id="mediaFileName" class="text-[10px] font-semibold text-slate-200 truncate">chart.png</p>
+                            <span class="text-[8px] text-emerald-400">Ready for Analysis</span>
                         </div>
                         <button onclick="clearMediaUpload()" class="text-slate-400 hover:text-rose-400 text-xs px-2"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <!-- Input Bar Fixed at Bottom of Chat Card -->
-                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center space-x-2 shrink-0">
-                        <label class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-800 cursor-pointer transition shrink-0">
+                    <div class="mt-1.5 pt-1.5 border-t border-slate-800/80 flex items-center space-x-1.5 shrink-0">
+                        <label class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-800 cursor-pointer transition shrink-0">
                             <i class="fa-solid fa-camera text-xs"></i>
                             <input type="file" id="mediaUploadInput" accept="image/*" onchange="handleMediaSelected(event)" class="hidden">
                         </label>
-                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Poochiye koi bhi sawal ya strategy..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
-                        <button onclick="sendChatMessage()" class="w-9 h-9 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center shrink-0 shadow-lg">
-                            <i class="fa-solid fa-paper-plane"></i>
+                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Poochiye koi bhi sawal..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                        <button onclick="sendChatMessage()" class="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center shrink-0 shadow-lg">
+                            <i class="fa-solid fa-paper-plane text-[10px]"></i>
                         </button>
                     </div>
                 </div>
@@ -183,7 +185,7 @@
             <div id="drawerBackdrop" onclick="toggleKnowledgeDrawer()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm opacity-0 transition-opacity pointer-events-none"></div>
             
             <div id="drawerPanel" class="slide-drawer absolute top-0 left-0 bottom-0 w-85 max-w-[90vw] bg-slate-900 border-r border-slate-800 shadow-2xl flex flex-col pointer-events-auto">
-                <div class="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950/50 shrink-0">
+                <div class="flex items-center justify-between p-3 border-b border-slate-800 bg-slate-950/50 shrink-0">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid fa-shield-halved text-cyan-400"></i>
                         <h3 class="text-sm font-bold text-slate-100">100% Sure-Shot Vault</h3>
@@ -246,18 +248,18 @@
         </div>
 
         <!-- FIXED MOBILE BOTTOM NAVIGATION BAR -->
-        <nav class="shrink-0 bg-slate-900/95 border-t border-slate-800 backdrop-blur-md flex justify-around p-2.5 z-40">
-            <button onclick="switchTab('quotes')" id="navQuotes" class="flex flex-col items-center text-cyan-400 text-[11px] space-y-0.5 transition">
-                <i class="fa-solid fa-list text-sm"></i><span>Quotes</span>
+        <nav class="absolute bottom-0 left-0 right-0 bg-slate-900/98 border-t border-slate-800 backdrop-blur-md flex justify-around p-2 z-40 shrink-0">
+            <button onclick="switchTab('quotes')" id="navQuotes" class="flex flex-col items-center text-cyan-400 text-[10px] space-y-0.5 transition">
+                <i class="fa-solid fa-list text-xs"></i><span>Quotes</span>
             </button>
-            <button onclick="switchTab('charts')" id="navCharts" class="flex flex-col items-center text-slate-400 text-[11px] space-y-0.5 transition">
-                <i class="fa-solid fa-chart-line text-sm"></i><span>Chart</span>
+            <button onclick="switchTab('charts')" id="navCharts" class="flex flex-col items-center text-slate-400 text-[10px] space-y-0.5 transition">
+                <i class="fa-solid fa-chart-line text-xs"></i><span>Chart</span>
             </button>
-            <button onclick="switchTab('knowledge')" id="navKnowledge" class="flex flex-col items-center text-slate-400 text-[11px] space-y-0.5 transition">
-                <i class="fa-solid fa-satellite-dish text-sm"></i><span>Radar AI</span>
+            <button onclick="switchTab('knowledge')" id="navKnowledge" class="flex flex-col items-center text-slate-400 text-[10px] space-y-0.5 transition">
+                <i class="fa-solid fa-satellite-dish text-xs"></i><span>Radar AI</span>
             </button>
-            <button onclick="switchTab('teach')" id="navTeach" class="flex flex-col items-center text-slate-400 text-[11px] space-y-0.5 transition">
-                <i class="fa-solid fa-comments text-sm"></i><span>AI Chat</span>
+            <button onclick="switchTab('teach')" id="navTeach" class="flex flex-col items-center text-slate-400 text-[10px] space-y-0.5 transition">
+                <i class="fa-solid fa-comments text-xs"></i><span>AI Chat</span>
             </button>
         </nav>
     </div>
@@ -283,15 +285,6 @@
                 targetText: "Target Confirmed: Up to Daily Order Block @ $2,385.50",
                 img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=500&auto=format&fit=crop&q=60",
                 desc: "On 15m chart, when price sweeps previous session high/low and creates an immediate Fair Value Gap, market hits 100% accuracy toward opposing Order Block."
-            },
-            {
-                id: 2,
-                title: "2. Institutional Order Block (OB) Expansion",
-                winrate: "100%",
-                detections: 62410900,
-                targetText: "Target Confirmed: Liquidity Pool at Asian High ($2,398.00)",
-                img: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=500&auto=format&fit=crop&q=60",
-                desc: "Identifies the final bearish candle before impulsive expansion. Re-test of this OB yields 100% sure-shot continuation."
             }
         ];
 
@@ -520,19 +513,9 @@
         }
 
         function generateExpertAIResponse(query) {
-            const q = query.toLowerCase();
-            if (q.includes('fvg') || q.includes('fair value gap')) {
-                return `<b>Fair Value Gap (FVG) - Expert Breakdown:</b><br><br>
-                1. <b>Definition:</b> FVG tab banta hai jab market mein tezi se imbalance candle aati hai.<br>
-                2. <b>100% Sure-Shot Setup:</b> Liquidity sweep ke sath FVG re-test par accuracy 100% hoti hai.<br>
-                3. <b>Target:</b> Opposing Order Block zone tak ka target confirmed hai.<br><br>
-                <i>💡 Autonomous Engine ne isko Vault mein save kar liya hai!</i>`;
-            } else {
-                return `<b>Expert AI Analysis on: "${query}"</b><br><br>
-                1. <b>Core Structure:</b> Market hamesha Liquidity pools aur Order blocks par reaction deta hai.<br>
-                2. <b>Execution Rule:</b> 15m timeframe par sweep aur BOS hone par entry plan karein.<br>
-                3. <b>Autonomous Action:</b> Query ko analyze karke Sure-Shot Vault mein update kar diya gaya hai. Left menu mein check karein!`;
-            }
+            return `<b>Expert AI Analysis on: "${query}"</b><br><br>
+            1. <b>Core Structure:</b> Market hamesha Liquidity pools aur Order blocks par reaction deta hai.<br>
+            2. <b>Execution Rule:</b> 15m timeframe par sweep aur BOS hone par entry plan karein.`;
         }
 
         function sendChatMessage() {
@@ -547,7 +530,7 @@
                 userHtml += `<p class="text-[10px] italic text-cyan-400">[Chart Image Attached]</p>`;
             }
             userHtml += `<p>${text || "Analyze this setup."}</p></div>
-                <div class="w-6 h-6 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center shrink-0 text-xs font-bold">You</div>
+                <div class="w-5 h-5 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center shrink-0 text-[10px] font-bold">You</div>
             </div>`;
             chatMessages.insertAdjacentHTML('beforeend', userHtml);
             input.value = '';
@@ -555,31 +538,14 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
             setTimeout(() => {
-                let expertReply = generateExpertAIResponse(text || "Setup analysis");
                 let randomCount = Math.floor(Math.random() * 25000000) + 40000000;
-                
-                let newTopic = {
-                    id: aiMasterTopics.length + 1,
-                    title: `Expert Query #${aiMasterTopics.length + 1}`,
-                    winrate: "100%",
-                    detections: randomCount,
-                    targetText: "Target Confirmed: Order Block Zone ($2,395.00)",
-                    img: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=500&auto=format&fit=crop&q=60",
-                    desc: "Expert AI Brain evaluated your query, applied 100% win-rate criteria, and saved it to the Vault."
-                };
-                aiMasterTopics.push(newTopic);
-                saveVaultToStorage();
-
                 let aiHtml = `<div class="flex items-start space-x-2">
-                    <div class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-xs font-bold">AI</div>
-                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl rounded-tl-none space-y-2 text-slate-200 max-w-[85%]">
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 block w-max">✅ 100% Win-Rate Verified!</span>
-                        <p>Pattern autonomously saved to your Sure-Shot Vault.</p>
-                        <p class="text-xs text-slate-300">📊 <b>Total Detections:</b> ${randomCount.toLocaleString()} / 100M</p>
-                        <p class="text-xs text-cyan-300 font-mono">🎯 <b>Target Calculated:</b> Up to Order Block @ $2,392.40 (Liquidity Sweep Safe).</p>
-                        <div class="mt-2 pt-2 border-t border-slate-800 flex justify-between items-center">
-                            <button onclick="toggleKnowledgeDrawer()" class="px-3 py-1 bg-cyan-500 text-slate-950 font-bold rounded-lg text-[10px]">📁 Open Sure-Shot Vault</button>
-                        </div>
+                    <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
+                    <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl rounded-tl-none space-y-2 text-slate-200 max-w-[85%]">
+                        <span class="text-[9px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 block w-max">✅ 100% Win-Rate Verified!</span>
+                        <p class="text-xs">Pattern autonomously saved to your Sure-Shot Vault.</p>
+                        <p class="text-[11px] text-slate-300">📊 <b>Total Detections:</b> ${randomCount.toLocaleString()} / 100M</p>
+                        <p class="text-[11px] text-cyan-300 font-mono">🎯 <b>Target Calculated:</b> Up to Order Block @ $2,392.40</p>
                     </div>
                 </div>`;
                 chatMessages.insertAdjacentHTML('beforeend', aiHtml);
@@ -590,8 +556,7 @@
         function startLiveCommentaryStream() {
             const commentaries = [
                 "[Autonomous AI Brain]: Liquidity Sweep detected at Session High. Target locked.",
-                "[Autonomous AI Brain]: 100% Sure-Shot FVG imbalance calculated. Executing target...",
-                "[Autonomous AI Brain]: Pattern frequency counter updated across 15m candle streams."
+                "[Autonomous AI Brain]: 100% Sure-Shot FVG imbalance calculated. Executing target..."
             ];
             let idx = 0;
             if (commentaryInterval) clearInterval(commentaryInterval);
@@ -736,21 +701,6 @@
                     </div>
                 `;
             }).join('');
-
-            if (dynamicTargetInterval) clearInterval(dynamicTargetInterval);
-            dynamicTargetInterval = setInterval(() => {
-                document.querySelectorAll('.target-dynamic').forEach(el => {
-                    let cur = parseFloat(el.innerText);
-                    let dec = parseInt(el.getAttribute('data-decimals'));
-                    let dir = parseInt(el.getAttribute('data-dir'));
-                    let sure = parseFloat(el.getAttribute('data-sure'));
-                    let step = dec === 4 ? 0.0001 : 0.01;
-                    let newVal = cur + (dir * (Math.random() > 0.4 ? step : 0));
-                    if (dir === 1 && newVal > sure) newVal = sure;
-                    if (dir === -1 && newVal < sure) newVal = sure;
-                    el.innerText = newVal.toFixed(dec);
-                });
-            }, 2000);
         }
 
         function openAssetChart(symbol, name) {
