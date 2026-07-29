@@ -26,7 +26,7 @@
         .slide-drawer.open {
             transform: translateX(0);
         }
-        /* Perfect Mobile Dynamic Viewport Fix for Keyboard Overlap */
+        /* Perfect Mobile Dynamic Viewport Fix */
         html, body {
             height: 100vh;
             height: 100dvh;
@@ -133,7 +133,7 @@
                 <div class="space-y-3 pb-12" id="aiAnalysisGrid"></div>
             </section>
 
-            <!-- TAB 4: ADVANCED EXPERT AI CHAT (FIXED KEYBOARD LAYOUT) -->
+            <!-- TAB 4: ADVANCED EXPERT AI CHAT (FIXED LAYOUT & INPUT) -->
             <section id="tabTeach" class="absolute inset-0 hidden flex flex-col p-2 space-y-1 overflow-hidden">
                 <div class="flex items-center justify-between shrink-0 px-1">
                     <div>
@@ -142,11 +142,11 @@
                     <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">Active</span>
                 </div>
 
-                <!-- Chat Box Container - Fully Fixed & Scrollable Messages -->
-                <div class="neon-card rounded-2xl p-2.5 flex-1 flex flex-col justify-between border border-slate-800 overflow-hidden">
+                <!-- Chat Box Container -->
+                <div class="neon-card rounded-2xl p-2.5 flex-1 flex flex-col border border-slate-800 overflow-hidden relative">
                     
                     <!-- Scrollable Messages Area -->
-                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
+                    <div id="chatMessages" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs mb-2">
                         <div class="flex items-start space-x-2">
                             <div class="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-[10px] font-bold">AI</div>
                             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl rounded-tl-none space-y-1.5 text-slate-200">
@@ -156,7 +156,7 @@
                     </div>
 
                     <!-- Upload Preview Area -->
-                    <div id="mediaPreviewContainer" class="hidden items-center space-x-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-xl my-1 shrink-0">
+                    <div id="mediaPreviewContainer" class="hidden items-center space-x-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-xl mb-2 shrink-0">
                         <div id="mediaThumbnail" class="w-7 h-7 rounded bg-slate-800 flex items-center justify-center text-cyan-400 overflow-hidden"></div>
                         <div class="flex-1 overflow-hidden">
                             <p id="mediaFileName" class="text-[10px] font-semibold text-slate-200 truncate">chart.png</p>
@@ -165,13 +165,13 @@
                         <button onclick="clearMediaUpload()" class="text-slate-400 hover:text-rose-400 text-xs px-2"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
-                    <!-- Input Bar Fixed at Bottom of Chat Card -->
-                    <div class="mt-1.5 pt-1.5 border-t border-slate-800/80 flex items-center space-x-1.5 shrink-0">
+                    <!-- Input Bar Properly Docked -->
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center space-x-1.5 shrink-0 bg-slate-950/40">
                         <label class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-slate-800 cursor-pointer transition shrink-0">
                             <i class="fa-solid fa-camera text-xs"></i>
                             <input type="file" id="mediaUploadInput" accept="image/*" onchange="handleMediaSelected(event)" class="hidden">
                         </label>
-                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Poochiye koi bhi sawal..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
+                        <input type="text" id="chatInputBox" onkeypress="handleChatKeyPress(event)" placeholder="Poochiye koi bhi sawal..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500">
                         <button onclick="sendChatMessage()" class="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center shrink-0 shadow-lg">
                             <i class="fa-solid fa-paper-plane text-[10px]"></i>
                         </button>
@@ -290,7 +290,6 @@
 
         let aiMasterTopics = JSON.parse(localStorage.getItem('apex_sure_vault')) || defaultSureShotVault;
         let currentActiveFolder = 'ALL';
-        let dynamicTargetInterval = null;
         let commentaryInterval = null;
         let showOverlays = true;
         let overlayAnimFrame = null;
@@ -515,7 +514,6 @@
         function generateExpertAIResponse(query) {
             const q = query.toLowerCase();
             
-            // Check for personal questions
             if (q.includes('my name') || q.includes('mera naam')) {
                 return `Aapne abhi tak mujhe apna naam nahi bataya hai! Aapka naam kya hai? Main ise yaad rakhunga.`;
             }
@@ -523,7 +521,6 @@
                 return `Namaste! Mera expert reasoning brain active hai. Aap mujhse koi bhi trading sawal pooch sakte hain ya apna naam bata sakte hain.`;
             }
 
-            // Default Trading Analysis Response for trading queries
             let randomCount = Math.floor(Math.random() * 25000000) + 40000000;
             return `✅ <b>100% Win-Rate Verified!</b><br>
             Pattern autonomously saved to your Sure-Shot Vault.<br>
@@ -564,7 +561,6 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }, 600);
         }
-
 
         function startLiveCommentaryStream() {
             const commentaries = [
