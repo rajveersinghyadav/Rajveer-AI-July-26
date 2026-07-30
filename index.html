@@ -803,39 +803,40 @@
 
         // REAL GEMINI API CALL FUNCTION
         async function callGeminiAPI(promptText) {
-            if (!GEMINI_API_KEY) {
-                return "⚠️ Please click on the **Gemini Key** button at the top header, enter your Google Gemini API key, and save it first!";
+    if (!GEMINI_API_KEY) {
+        return "⚠️ Please click on the **Gemini Key** button at the top header, enter your Google Gemini API key, and save it first!";
+    }
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const requestBody = {
+        contents: [
+            {
+                parts: [{ text: promptText }]
             }
+        ]
+    };
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-            
-            const requestBody = {
-                contents: [
-                    {
-                        parts: [{ text: promptText }]
-                    }
-                ]
-            };
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
 
-            try {
-                let response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                    let errData = await response.json();
-                    return `❌ API Error: ${errData.error?.message || response.statusText}`;
-                }
-
-                let data = await response.json();
-                let reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                return reply || "No response generated.";
-            } catch (error) {
-                return `❌ Connection Error: ${error.message}`;
-            }
+        if (!response.ok) {
+            let errData = await response.json();
+            return `❌ API Error: ${errData.error?.message || response.statusText}`;
         }
+
+        let data = await response.json();
+        let reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        return reply || "No response generated.";
+    } catch (error) {
+        return `❌ Connection Error: ${error.message}`;
+    }
+}
+
 
         async function sendChatMessage() {
             const input = document.getElementById('chatInputBox');
