@@ -802,12 +802,12 @@
         }
 
         // REAL GEMINI API CALL FUNCTION
-        async function callGeminiAPI(promptText) {
+async function callGeminiAPI(promptText) {
     if (!GEMINI_API_KEY) {
         return "⚠️ Please click on the **Gemini Key** button at the top header, enter your Google Gemini API key, and save it first!";
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`;
     
     const requestBody = {
         contents: [
@@ -836,7 +836,6 @@
         return `❌ Connection Error: ${error.message}`;
     }
 }
-
 
 
         async function sendChatMessage() {
