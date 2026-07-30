@@ -1085,5 +1085,75 @@ async function callGeminiAPI(promptText) {
             draw();
         });
     </script>
+
+    <!-- GitHub Sync Box -->
+<div style="margin: 20px auto; max-width: 400px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #ffffff; text-align: left; font-family: sans-serif;">
+    <h3 style="margin-top: 0; color: #333;">GitHub Sync</h3>
+    <p style="font-size: 13px; color: #666;">Apna GitHub Personal Access Token yahan enter karein:</p>
+    <input type="password" id="ghToken" placeholder="Enter Token (ghp_...)" style="width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;" />
+    <button onclick="syncToGitHub()" style="width: 100%; background: #238636; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Sync Code to GitHub</button>
+    <p id="syncStatus" style="margin-top: 8px; font-size: 13px;"></p>
+</div>
+
+<script>
+async function syncToGitHub() {
+    const token = document.getElementById('ghToken').value.trim();
+    const statusEl = document.getElementById('syncStatus');
+
+    if (!token) {
+        statusEl.style.color = 'red';
+        statusEl.innerText = 'Pehle apna GitHub Token enter karein!';
+        return;
+    }
+
+    statusEl.style.color = 'blue';
+    statusEl.innerText = 'Syncing with GitHub...';
+
+    const owner = 'rajveersinghyadav';
+    const repo = 'Rajveer-AI-July-26';
+    const path = 'index.html';
+    
+    const content = document.documentElement.outerHTML; 
+    const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+    try {
+        const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        
+        let sha = '';
+        if (getRes.ok) {
+            const fileData = await getRes.json();
+            sha = fileData.sha;
+        }
+
+        const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: 'Update code via ApexAI Sync',
+                content: encodedContent,
+                sha: sha
+            })
+        });
+
+        if (putRes.ok) {
+            statusEl.style.color = 'green';
+            statusEl.innerText = 'Success! Code GitHub par update ho gaya! 🎉';
+        } else {
+            const errData = await putRes.json();
+            statusEl.style.color = 'red';
+            statusEl.innerText = 'Error: ' + errData.message;
+        }
+    } catch (err) {
+        statusEl.style.color = 'red';
+        statusEl.innerText = 'Network Error: ' + err.message;
+    }
+}
+</script>
+
 </body>
 </html>
