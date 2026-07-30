@@ -561,6 +561,56 @@
                 </div>
             </div>
         </div>
+<!-- SETTINGS PROFESSIONAL PANEL -->
+<div id="tabSetting" class="tab-content hidden p-4 pb-20 text-slate-200">
+    <h2 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-gear"></i> App Settings & Connections
+    </h2>
+
+    <div class="space-y-4">
+        <!-- 1. Gemini AI Configuration -->
+        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
+            <h3 class="text-sm font-semibold text-cyan-300 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-key"></i> Gemini AI Configuration
+            </h3>
+            <p class="text-xs text-slate-400 mb-3">Apni Gemini API key yahan safe rakhein taaki AI live response de sake.</p>
+            <input type="password" id="settingGeminiKey" placeholder="Enter Gemini API Key..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white mb-2 focus:border-cyan-400 outline-none">
+            <button onclick="saveGeminiKeyFromSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold py-2 rounded-lg transition">Save Gemini Key</button>
+        </div>
+
+        <!-- 2. WhatsApp Integration -->
+        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
+            <h3 class="text-sm font-semibold text-emerald-400 mb-1 flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp Engine
+            </h3>
+            <p class="text-xs text-slate-400 mb-3">WhatsApp live alerts aur engine connection manage karein.</p>
+            <button onclick="openWhatsAppEngine()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
+                <i class="fa-brands fa-whatsapp"></i> Connect / Open WhatsApp
+            </button>
+        </div>
+
+        <!-- 3. GitHub Direct Sync -->
+        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
+            <h3 class="text-sm font-semibold text-purple-400 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-code-merge"></i> GitHub Direct Sync
+            </h3>
+            <p class="text-xs text-slate-400 mb-3">Apna code seedha GitHub par update aur sync karein.</p>
+            <input type="text" id="settingGithubToken" placeholder="Enter Token (ghp_...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white mb-2 focus:border-purple-400 outline-none">
+            <button onclick="syncGithubFromSettings()" class="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition">Sync App to GitHub</button>
+        </div>
+
+        <!-- 4. Data Backup & Restore -->
+        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
+            <h3 class="text-sm font-semibold text-blue-400 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-down"></i> App Backup
+            </h3>
+            <p class="text-xs text-slate-400 mb-3">Apne saare data aur configuration ka backup download karein.</p>
+            <button onclick="triggerAppBackup()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-download"></i> Download Backup File
+            </button>
+        </div>
+    </div>
+</div>
 
    <!-- FIXED MOBILE BOTTOM NAVIGATION BAR -->
 <nav class="absolute bottom-0 left-0 right-0 h-14 bg-slate-950/90 border-t border-slate-800 flex justify-around items-center z-50">
@@ -581,7 +631,6 @@
     </button>
 </nav>
 
-        </nav>
     </div>
 
     <!-- APP ENGINE SCRIPT -->
@@ -1373,6 +1422,51 @@ async function syncApexToGitHub() {
         statusEl.innerText = 'Network Error: ' + err.message;
     }
 }
+	// Tab Switching Function Update
+function switchTab(tabName) {
+    // Sabhi tabs ko chupayein (Hide all tabs)
+    const tabs = ['quotes', 'charts', 'knowledge', 'teach', 'setting'];
+    tabs.forEach(t => {
+        const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)) || document.getElementById(t);
+        if(el) el.classList.add('hidden');
+    });
+
+    // Selected tab ko dikhayein (Show active tab)
+    const activeEl = document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)) || document.getElementById(tabName);
+    if(activeEl) activeEl.classList.remove('hidden');
+}
+
+// Settings ke andar ke buttons ke functions (Aap inme apna purana logic connect kar sakte hain)
+function saveGeminiKeyFromSettings() {
+    const key = document.getElementById('settingGeminiKey').value;
+    if(key) {
+        localStorage.setItem('gemini_api_key', key);
+        alert('Gemini Key successfully saved!');
+    } else {
+        alert('Please enter a valid key.');
+    }
+}
+
+function openWhatsAppEngine() {
+    // Apka purana WhatsApp function ya link
+    alert('Opening WhatsApp Engine connection...');
+}
+
+function syncGithubFromSettings() {
+    const token = document.getElementById('settingGithubToken').value;
+    if(token) {
+        alert('Syncing with GitHub...');
+        // Yahan apna GitHub sync wala code run kar sakte hain
+    } else {
+        alert('Please enter GitHub Token.');
+    }
+}
+
+function triggerAppBackup() {
+    alert('Generating App Backup...');
+    // Backup logic here
+}
+
 </script>
 
 	
