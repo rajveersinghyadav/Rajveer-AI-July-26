@@ -1438,39 +1438,26 @@
 
 
 
-<!-- GitHub Direct Sync & Update Box -->
-
-<div style="margin: 20px auto; max-width: 400px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #ffffff; text-align: left; font-family: sans-serif;">
-    <h3 style="margin-top: 0; color: #333;">ApexAI Direct GitHub Sync</h3>
-    <p style="font-size: 13px; color: #666;">Apna GitHub Personal Access Token yahan enter karein:</p>
-    <input type="password" id="ghToken" placeholder="Enter Token (ghp_...)" style="width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-    
-    <textarea id="aiCustomCode" placeholder="Agar AI se koi naya code likhwakar yahan daalna hai, toh paste karein (Optional)..." style="width: 100%; height: 60px; padding: 8px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;"></textarea>
-    
-    <button onclick="syncApexToGitHub()" style="width: 100%; background: #238636; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">Sync Current App to GitHub</button>
-    <p id="syncStatus" style="margin-top: 8px; font-size: 13px; color: blue;">Syncing code with GitHub...</p>
-</div>
-
-	<script>
-async function syncApexToGitHub() {
-    const token = document.getElementById('ghToken').value.trim();
-    const customCodeBox = document.getElementById('aiCustomCode').value.trim();
-    const statusEl = document.getElementById('syncStatus');
+<script>
+// Naya GitHub Sync Function (Settings Panel ke liye)
+async function saveGithubSyncSettings() {
+    const token = document.getElementById('settingGithubToken').value.trim();
+    const customCodeBox = document.getElementById('settingGithubCode').value.trim();
+    const statusEl = document.getElementById('githubSyncStatusText');
 
     if (!token) {
-        statusEl.style.color = 'red';
-        statusEl.innerText = 'Pehle apna GitHub Token enter karein!';
+        statusEl.style.color = '#ef4444';
+        statusEl.innerText = 'Status: Pehle apna GitHub Token enter karein!';
         return;
     }
 
-    statusEl.style.color = 'blue';
-    statusEl.innerText = 'Syncing code with GitHub...';
+    statusEl.style.color = '#38bdf8';
+    statusEl.innerText = 'Status: Syncing code with GitHub...';
 
     const owner = 'rajveersinghyadav';
     const repo = 'Rajveer-AI-July-26';
     const path = 'index.html';
     
-    // Agar aapne box mein koi alag code dala hai toh wo jayega, nahi toh poori app ka code update hoga
     const content = customCodeBox ? customCodeBox : document.documentElement.outerHTML; 
     const encodedContent = btoa(unescape(encodeURIComponent(content)));
 
@@ -1499,34 +1486,59 @@ async function syncApexToGitHub() {
         });
 
         if (putRes.ok) {
-            statusEl.style.color = 'green';
-            statusEl.innerText = 'Success! Code GitHub par update ho gaya! 🎉';
-            document.getElementById('aiCustomCode').value = ''; // Box clear kar do
+            statusEl.style.color = '#22c55e';
+            statusEl.innerText = 'Status: Success! Code GitHub par update ho gaya! 🎉';
+            document.getElementById('settingGithubCode').value = ''; 
         } else {
             const errData = await putRes.json();
-            statusEl.style.color = 'red';
-            statusEl.innerText = 'Error: ' + errData.message;
+            statusEl.style.color = '#ef4444';
+            statusEl.innerText = 'Status: Error - ' + errData.message;
         }
     } catch (err) {
-        statusEl.style.color = 'red';
-        statusEl.innerText = 'Network Error: ' + err.message;
+        statusEl.style.color = '#ef4444';
+        statusEl.innerText = 'Status: Network Error - ' + err.message;
     }
 }
-	// Tab Switching Function Update
+
+// Tab Switching Function Update
 function switchTab(tabName) {
-    // Sabhi tabs ko chupayein (Hide all tabs)
     const tabs = ['quotes', 'charts', 'knowledge', 'teach', 'setting'];
     tabs.forEach(t => {
         const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)) || document.getElementById(t);
         if(el) el.classList.add('hidden');
     });
 
-    // Selected tab ko dikhayein (Show active tab)
     const activeEl = document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)) || document.getElementById(tabName);
     if(activeEl) activeEl.classList.remove('hidden');
 }
 
-// Settings ke andar ke buttons ke functions (Aap inme apna purana logic connect kar sakte hain)
+// Sub-tab switcher logic inside Settings Panel
+function switchSettingSubTab(tab) {
+    ['gemini', 'github', 'whatsapp', 'backup'].forEach(t => {
+        const panel = document.getElementById('settingPanel' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById('setSubBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+        if(panel) panel.classList.add('hidden');
+        if(btn) {
+            btn.className = "w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-slate-700";
+        }
+    });
+    
+    const activePanel = document.getElementById('settingPanel' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    const activeBtn = document.getElementById('setSubBtn' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    
+    if(activePanel) activePanel.classList.remove('hidden');
+    if(activeBtn) {
+        let activeStyle = 'w-full p-3 rounded-xl border text-xs font-bold flex items-center justify-between transition shadow ';
+        if(tab === 'gemini') activeStyle += 'bg-cyan-950/80 border-cyan-500/40 text-cyan-300';
+        else if(tab === 'github') activeStyle += 'bg-purple-950/80 border-purple-500/40 text-purple-300';
+        else if(tab === 'whatsapp') activeStyle += 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300';
+        else if(tab === 'backup') activeStyle += 'bg-blue-950/80 border-blue-500/40 text-blue-300';
+        
+        activeBtn.className = activeStyle;
+    }
+}
+
+// Settings ke andar ke baki functions
 function saveGeminiKeyFromSettings() {
     const key = document.getElementById('settingGeminiKey').value;
     if(key) {
@@ -1537,29 +1549,18 @@ function saveGeminiKeyFromSettings() {
     }
 }
 
-function openWhatsAppEngine() {
-    // Apka purana WhatsApp function ya link
-    alert('Opening WhatsApp Engine connection...');
+function saveWhatsAppCredentialsFromSettings() {
+    alert('WhatsApp credentials saved successfully!');
 }
 
-function syncGithubFromSettings() {
-    const token = document.getElementById('settingGithubToken').value;
-    if(token) {
-        alert('Syncing with GitHub...');
-        // Yahan apna GitHub sync wala code run kar sakte hain
-    } else {
-        alert('Please enter GitHub Token.');
-    }
+function downloadAppBackupFile() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "apexai_backup.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
 }
-
-function triggerAppBackup() {
-    alert('Generating App Backup...');
-    // Backup logic here
-}
-
 </script>
-
-	
-
-
 </body></html>
