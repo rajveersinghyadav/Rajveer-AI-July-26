@@ -563,24 +563,35 @@
             </div>
         </div>
 <!-- SETTINGS PROFESSIONAL PANEL -->
-<div id="tabSetting" class="tab-content hidden p-4 pb-20 text-slate-200 overflow-y-auto">
+<div id="tabSetting" class="tab-content hidden p-4 pb-24 text-slate-200 overflow-y-auto">
     <h2 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">
         <i class="fa-solid fa-gear"></i> App Settings & Connections
     </h2>
 
-    <!-- Settings List Navigation Buttons -->
-    <div class="grid grid-cols-3 gap-2 mb-4">
-        <button onclick="switchSettingSubTab('gemini')" id="setSubBtnGemini" class="p-2.5 rounded-xl bg-cyan-600 text-white text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition shadow border border-cyan-400/40">
-            <i class="fa-solid fa-key text-xs"></i>
-            <span>Gemini API</span>
+    <!-- Vertical List Style Navigation (Ek ke neeche ek clean options) -->
+    <div class="flex flex-col space-y-2 mb-4">
+        <button onclick="switchSettingSubTab('gemini')" id="setSubBtnGemini" class="w-full p-3 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-between transition shadow">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-key text-sm text-cyan-400"></i>
+                <span>Gemini API Connection</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-cyan-400"></i>
         </button>
-        <button onclick="switchSettingSubTab('github')" id="setSubBtnGithub" class="p-2.5 rounded-xl bg-slate-900 text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition border border-slate-800 hover:border-purple-500">
-            <i class="fa-solid fa-code-merge text-xs text-purple-400"></i>
-            <span>Github Sync</span>
+
+        <button onclick="switchSettingSubTab('github')" id="setSubBtnGithub" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-purple-500">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-code-merge text-sm text-purple-400"></i>
+                <span>Github Sync Connection</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
         </button>
-        <button onclick="switchSettingSubTab('whatsapp')" id="setSubBtnWhatsapp" class="p-2.5 rounded-xl bg-slate-900 text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition border border-slate-800 hover:border-emerald-500">
-            <i class="fa-brands fa-whatsapp text-xs text-emerald-400"></i>
-            <span>WhatsApp</span>
+
+        <button onclick="switchSettingSubTab('whatsapp')" id="setSubBtnWhatsapp" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-emerald-500">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
+                <span>WhatsApp Integration</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
         </button>
     </div>
 
@@ -624,14 +635,14 @@
 </div>
 
 <script>
-    // Sub-tab switcher logic inside Settings
+    // Vertical List Sub-tab Switcher Logic
     function switchSettingSubTab(tab) {
         ['gemini', 'github', 'whatsapp'].forEach(t => {
             const panel = document.getElementById('settingPanel' + t.charAt(0).toUpperCase() + t.slice(1));
             const btn = document.getElementById('setSubBtn' + t.charAt(0).toUpperCase() + t.slice(1));
             if(panel) panel.classList.add('hidden');
             if(btn) {
-                btn.className = "p-2.5 rounded-xl bg-slate-900 text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition border border-slate-800";
+                btn.className = "w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-slate-700";
             }
         });
         
@@ -640,11 +651,16 @@
         
         if(activePanel) activePanel.classList.remove('hidden');
         if(activeBtn) {
-            let activeColor = tab === 'gemini' ? 'bg-cyan-600 border-cyan-400/40 text-white' : (tab === 'github' ? 'bg-purple-600 border-purple-400/40 text-white' : 'bg-emerald-600 border-emerald-400/40 text-slate-950');
-            activeBtn.className = `p-2.5 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition shadow border ${activeColor}`;
+            let activeStyle = tab === 'gemini' 
+                ? "w-full p-3 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-between transition shadow" 
+                : (tab === 'github' 
+                    ? "w-full p-3 rounded-xl bg-purple-950/80 border border-purple-500/40 text-purple-300 text-xs font-bold flex items-center justify-between transition shadow" 
+                    : "w-full p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between transition shadow");
+            activeBtn.className = activeStyle;
         }
     }
 </script>
+
 
 
 
