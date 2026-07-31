@@ -563,7 +563,7 @@
             </div>
         </div>
 <!-- SETTINGS PROFESSIONAL PANEL -->
-<div id="tabSetting" class="tab-content hidden p-4 pb-20 text-slate-200">
+<div id="tabSetting" class="tab-content hidden p-4 pb-20 text-slate-200 overflow-y-auto">
     <h2 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">
         <i class="fa-solid fa-gear"></i> App Settings & Connections
     </h2>
@@ -575,7 +575,7 @@
                 <i class="fa-solid fa-key"></i> Gemini AI Configuration
             </h3>
             <p class="text-xs text-slate-400 mb-3">Apni Gemini API key yahan safe rakhein taaki AI live response de sake.</p>
-            <input type="password" id="settingGeminiKey" placeholder="Enter Gemini API Key..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white mb-2 focus:border-cyan-400 outline-none">
+            <input type="password" id="settingGeminiKey" placeholder="Enter Gemini API Key..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white mb-2 focus:border-cyan-400 outline-none font-mono">
             <button onclick="saveGeminiKeyFromSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold py-2 rounded-lg transition">Save Gemini Key</button>
         </div>
 
@@ -590,15 +590,26 @@
             </button>
         </div>
 
-        <!-- 3. GitHub Direct Sync -->
+        <!-- 3. GitHub Connection & Sync (Added Professional Section) -->
         <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
             <h3 class="text-sm font-semibold text-purple-400 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-code-merge"></i> GitHub Direct Sync
+                <i class="fa-solid fa-code-merge"></i> GitHub Connection & Sync
             </h3>
-            <p class="text-xs text-slate-400 mb-3">Apna code seedha GitHub par update aur sync karein.</p>
-            <input type="text" id="settingGithubToken" placeholder="Enter Token (ghp_...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white mb-2 focus:border-purple-400 outline-none">
-            <button onclick="syncGithubFromSettings()" class="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition">Sync App to GitHub</button>
+            <p class="text-xs text-slate-400 mb-3">Apna GitHub Personal Access Token enter karein aur code ko directly sync karein.</p>
+            
+            <div class="space-y-2 mb-3">
+                <input type="password" id="settingGithubToken" placeholder="Enter Token (ghp_...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white focus:border-purple-400 outline-none font-mono">
+                <textarea id="settingGithubCode" placeholder="Agar AI se koi naya code likhwakar yahan daalna hai, toh paste karein (Optional)..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white focus:border-purple-400 outline-none font-mono h-20 resize-none"></textarea>
+            </div>
+
+            <button onclick="saveGithubSyncSettings()" class="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Sync Current App to GitHub
+            </button>
+            <p id="githubSyncStatusText" class="text-[10px] text-slate-400 mt-2 text-center font-mono">Status: Ready to sync</p>
         </div>
+    </div>
+</div>
+
 
         <!-- 4. Data Backup & Restore -->
         <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
