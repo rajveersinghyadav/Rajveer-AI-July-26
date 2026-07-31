@@ -568,47 +568,84 @@
         <i class="fa-solid fa-gear"></i> App Settings & Connections
     </h2>
 
-    <div class="space-y-4">
-        <!-- 1. Gemini AI Configuration -->
-        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
-            <h3 class="text-sm font-semibold text-cyan-300 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-key"></i> Gemini AI Configuration
-            </h3>
-            <p class="text-xs text-slate-400 mb-3">Apni Gemini API key yahan safe rakhein taaki AI live response de sake.</p>
-            <input type="password" id="settingGeminiKey" placeholder="Enter Gemini API Key..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white mb-2 focus:border-cyan-400 outline-none font-mono">
-            <button onclick="saveGeminiKeyFromSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold py-2 rounded-lg transition">Save Gemini Key</button>
-        </div>
+    <!-- Settings List Navigation Buttons -->
+    <div class="grid grid-cols-3 gap-2 mb-4">
+        <button onclick="switchSettingSubTab('gemini')" id="setSubBtnGemini" class="p-2.5 rounded-xl bg-cyan-600 text-white text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition shadow border border-cyan-400/40">
+            <i class="fa-solid fa-key text-xs"></i>
+            <span>Gemini API</span>
+        </button>
+        <button onclick="switchSettingSubTab('github')" id="setSubBtnGithub" class="p-2.5 rounded-xl bg-slate-900 text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition border border-slate-800 hover:border-purple-500">
+            <i class="fa-solid fa-code-merge text-xs text-purple-400"></i>
+            <span>Github Sync</span>
+        </button>
+        <button onclick="switchSettingSubTab('whatsapp')" id="setSubBtnWhatsapp" class="p-2.5 rounded-xl bg-slate-900 text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition border border-slate-800 hover:border-emerald-500">
+            <i class="fa-brands fa-whatsapp text-xs text-emerald-400"></i>
+            <span>WhatsApp</span>
+        </button>
+    </div>
 
-        <!-- 2. WhatsApp Integration -->
-        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
-            <h3 class="text-sm font-semibold text-emerald-400 mb-1 flex items-center gap-2">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp Engine
-            </h3>
-            <p class="text-xs text-slate-400 mb-3">WhatsApp live alerts aur engine connection manage karein.</p>
-            <button onclick="openWhatsAppEngine()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
-                <i class="fa-brands fa-whatsapp"></i> Connect / Open WhatsApp
-            </button>
-        </div>
+    <!-- 1. Gemini API Connection Panel -->
+    <div id="settingPanelGemini" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3">
+        <h3 class="text-sm font-semibold text-cyan-300 flex items-center gap-2">
+            <i class="fa-solid fa-key"></i> Gemini API Connection
+        </h3>
+        <p class="text-xs text-slate-400">Apni Gemini API key yahan safe rakhein taaki AI live response de sake.</p>
+        <input type="password" id="settingGeminiKey" placeholder="Enter Gemini API Key (AIzaSy...)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-cyan-400 outline-none font-mono">
+        <button onclick="saveGeminiKeyFromSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition shadow-lg">Save Gemini Key</button>
+    </div>
 
-        <!-- 3. GitHub Connection & Sync (Added Professional Section) -->
-        <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-md">
-            <h3 class="text-sm font-semibold text-purple-400 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-code-merge"></i> GitHub Connection & Sync
-            </h3>
-            <p class="text-xs text-slate-400 mb-3">Apna GitHub Personal Access Token enter karein aur code ko directly sync karein.</p>
-            
-            <div class="space-y-2 mb-3">
-                <input type="password" id="settingGithubToken" placeholder="Enter Token (ghp_...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white focus:border-purple-400 outline-none font-mono">
-                <textarea id="settingGithubCode" placeholder="Agar AI se koi naya code likhwakar yahan daalna hai, toh paste karein (Optional)..." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-white focus:border-purple-400 outline-none font-mono h-20 resize-none"></textarea>
-            </div>
+    <!-- 2. Github Sync Connection Panel -->
+    <div id="settingPanelGithub" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3 hidden">
+        <h3 class="text-sm font-semibold text-purple-400 flex items-center gap-2">
+            <i class="fa-solid fa-code-merge"></i> Github Sync Connection
+        </h3>
+        <p class="text-xs text-slate-400">Apna GitHub Personal Access Token enter karein aur code ko directly sync karein.</p>
+        <input type="password" id="settingGithubToken" placeholder="Enter Token (ghp_...)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-purple-400 outline-none font-mono">
+        <textarea id="settingGithubCode" placeholder="Agar AI se koi naya code likhwakar yahan daalna hai, toh paste karein (Optional)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-purple-400 outline-none font-mono h-24 resize-none"></textarea>
+        <button onclick="saveGithubSyncSettings()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Sync Current App to GitHub
+        </button>
+        <p id="githubSyncStatusText" class="text-[10px] text-slate-400 text-center font-mono">Status: Ready to sync</p>
+    </div>
 
-            <button onclick="saveGithubSyncSettings()" class="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Sync Current App to GitHub
-            </button>
-            <p id="githubSyncStatusText" class="text-[10px] text-slate-400 mt-2 text-center font-mono">Status: Ready to sync</p>
+    <!-- 3. WhatsApp Integration Panel -->
+    <div id="settingPanelWhatsapp" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3 hidden">
+        <h3 class="text-sm font-semibold text-emerald-400 flex items-center gap-2">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Integration
+        </h3>
+        <p class="text-xs text-slate-400">WhatsApp live alerts aur UltraMsg engine connection manage karein.</p>
+        <div class="space-y-2">
+            <input type="text" id="settingInstanceInput" placeholder="UltraMsg Instance ID (e.g. instance12345)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-emerald-400 outline-none font-mono">
+            <input type="text" id="settingTokenInput" placeholder="UltraMsg Token" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-emerald-400 outline-none font-mono">
+            <input type="text" id="settingPhoneInput" placeholder="Recipient Phone (+91...)" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-emerald-400 outline-none font-mono">
         </div>
+        <button onclick="saveWhatsAppCredentialsFromSettings()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition shadow-lg">Save & Test WhatsApp</button>
     </div>
 </div>
+
+<script>
+    // Sub-tab switcher logic inside Settings
+    function switchSettingSubTab(tab) {
+        ['gemini', 'github', 'whatsapp'].forEach(t => {
+            const panel = document.getElementById('settingPanel' + t.charAt(0).toUpperCase() + t.slice(1));
+            const btn = document.getElementById('setSubBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+            if(panel) panel.classList.add('hidden');
+            if(btn) {
+                btn.className = "p-2.5 rounded-xl bg-slate-900 text-slate-300 text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition border border-slate-800";
+            }
+        });
+        
+        const activePanel = document.getElementById('settingPanel' + tab.charAt(0).toUpperCase() + tab.slice(1));
+        const activeBtn = document.getElementById('setSubBtn' + tab.charAt(0).toUpperCase() + tab.slice(1));
+        
+        if(activePanel) activePanel.classList.remove('hidden');
+        if(activeBtn) {
+            let activeColor = tab === 'gemini' ? 'bg-cyan-600 border-cyan-400/40 text-white' : (tab === 'github' ? 'bg-purple-600 border-purple-400/40 text-white' : 'bg-emerald-600 border-emerald-400/40 text-slate-950');
+            activeBtn.className = `p-2.5 rounded-xl text-[11px] font-bold flex flex-col items-center justify-center gap-1 transition shadow border ${activeColor}`;
+        }
+    }
+</script>
+
 
 
         <!-- 4. Data Backup & Restore -->
