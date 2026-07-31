@@ -568,8 +568,9 @@
         <i class="fa-solid fa-gear"></i> App Settings & Connections
     </h2>
 
-    <!-- Vertical List Style Navigation (Ek ke neeche ek clean options) -->
+    <!-- Vertical List Style Navigation (4 Options) -->
     <div class="flex flex-col space-y-2 mb-4">
+        <!-- 1. Gemini API -->
         <button onclick="switchSettingSubTab('gemini')" id="setSubBtnGemini" class="w-full p-3 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-between transition shadow">
             <div class="flex items-center gap-2.5">
                 <i class="fa-solid fa-key text-sm text-cyan-400"></i>
@@ -578,6 +579,7 @@
             <i class="fa-solid fa-chevron-right text-[10px] text-cyan-400"></i>
         </button>
 
+        <!-- 2. Github Sync -->
         <button onclick="switchSettingSubTab('github')" id="setSubBtnGithub" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-purple-500">
             <div class="flex items-center gap-2.5">
                 <i class="fa-solid fa-code-merge text-sm text-purple-400"></i>
@@ -586,6 +588,7 @@
             <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
         </button>
 
+        <!-- 3. WhatsApp Integration -->
         <button onclick="switchSettingSubTab('whatsapp')" id="setSubBtnWhatsapp" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-emerald-500">
             <div class="flex items-center gap-2.5">
                 <i class="fa-brands fa-whatsapp text-sm text-emerald-400"></i>
@@ -593,9 +596,18 @@
             </div>
             <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
         </button>
+
+        <!-- 4. App Backup -->
+        <button onclick="switchSettingSubTab('backup')" id="setSubBtnBackup" class="w-full p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-between transition hover:border-blue-500">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-cloud-arrow-down text-sm text-blue-400"></i>
+                <span>App Backup & Restore</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500"></i>
+        </button>
     </div>
 
-    <!-- 1. Gemini API Connection Panel -->
+    <!-- Panel 1: Gemini API -->
     <div id="settingPanelGemini" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3">
         <h3 class="text-sm font-semibold text-cyan-300 flex items-center gap-2">
             <i class="fa-solid fa-key"></i> Gemini API Connection
@@ -605,7 +617,7 @@
         <button onclick="saveGeminiKeyFromSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition shadow-lg">Save Gemini Key</button>
     </div>
 
-    <!-- 2. Github Sync Connection Panel -->
+    <!-- Panel 2: Github Sync -->
     <div id="settingPanelGithub" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3 hidden">
         <h3 class="text-sm font-semibold text-purple-400 flex items-center gap-2">
             <i class="fa-solid fa-code-merge"></i> Github Sync Connection
@@ -619,7 +631,7 @@
         <p id="githubSyncStatusText" class="text-[10px] text-slate-400 text-center font-mono">Status: Ready to sync</p>
     </div>
 
-    <!-- 3. WhatsApp Integration Panel -->
+    <!-- Panel 3: WhatsApp Integration -->
     <div id="settingPanelWhatsapp" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3 hidden">
         <h3 class="text-sm font-semibold text-emerald-400 flex items-center gap-2">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp Integration
@@ -632,7 +644,19 @@
         </div>
         <button onclick="saveWhatsAppCredentialsFromSettings()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition shadow-lg">Save & Test WhatsApp</button>
     </div>
+
+    <!-- Panel 4: App Backup -->
+    <div id="settingPanelBackup" class="setting-sub-panel bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-xl space-y-3 hidden">
+        <h3 class="text-sm font-semibold text-blue-400 flex items-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-down"></i> App Backup & Restore
+        </h3>
+        <p class="text-xs text-slate-400">Apne saare data aur configuration ka backup download karein.</p>
+        <button onclick="downloadAppBackupFile()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+            <i class="fa-solid fa-download"></i> Download Backup File
+        </button>
+    </div>
 </div>
+
 
 <script>
     // Vertical List Sub-tab Switcher Logic
